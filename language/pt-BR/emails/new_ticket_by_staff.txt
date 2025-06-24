@@ -1,0 +1,16 @@
+Dear %%NAME%%,
+
+Your support ticket "%%SUBJECT%%" has been submitted.
+
+Ticket tracking ID: %%TRACK_ID%%
+
+You can view the status of your ticket here:
+%%TRACK_URL%%
+
+You will receive an email notification when our staff replies to your ticket.
+
+
+Sincerely,
+
+%%SITE_TITLE%%
+%%SITE_URL%%
