@@ -19,7 +19,8 @@ if (defined('SHOW_ONLINE'))
 {
     hesk_printOnline();
 }
-echo '<div style="text-align:center">'.$hesklang['not_original'].'</div>'; // Just for clarification
+
+if (defined('IS_ASSET')) echo '<div style="text-align:center">'.$hesklang['not_original'].'</div>'; // Just for clarification
 /*******************************************************************************
 The code below handles HESK licensing and must be included in the template.
 
