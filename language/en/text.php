@@ -2158,13 +2158,36 @@ $hesklang['can_due_date']='Can set due date'; // Permission to set and modify du
 $hesklang['can_due_date_e']='You do not have permission to set due dates';
 
 // CUSTOM CODE BY 'diogowermann'
-$hesklang['assets_management']='Assets management';
+$hesklang['assets_management']='Assets';
 $hesklang['components']='Components';
 $hesklang['computers']='Computers';
 $hesklang['monitors']='Monitors';
 $hesklang['printers']='Printers';
 $hesklang['departments']='Departments';
 $hesklang['customers']='Customers';
+$hesklang['menu_computers']='Computers';
+$hesklang['asset_intro_computers']='Here you are able to manage active computers. You are able to edit
+and delete any Computer from the icons in the &quot;Actions&quot; section. Any
+time you edit or add a new Computer, you can also add new Components directly from this page,
+but you cannot delete or edit any Component from here (enter Components menu for more info).';
+$hesklang['add_computer']='Add computer';
+$hesklang['mac_address']='MAC address';
+$hesklang['computer_name']='Computer name';
+$hesklang['customer']='Customer';
+$hesklang['cpu']='CPU';
+$hesklang['gpu']='GPU';
+$hesklang['ram']='RAM';
+$hesklang['font']='Font';
+$hesklang['disk']='Disk';
+$hesklang['internal']='Internal';
+$hesklang['desktop']='Desktop';
+$hesklang['protected']='Protected';
+$hesklang['actions']='Actions';
+$hesklang['integrated']='Integrated';
+$hesklang['dedicated']='Dedicated';
+$hesklang['empty']='Empty';
+$hesklang['no_data_found']='No data found';
+$hesklang['not_original']='This feature is not a part of the original software!';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW

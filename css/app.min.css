@@ -13839,3 +13839,36 @@ strong {
 .icon:hover {
     transform: scale(1.1);
 }
+
+/* CUSTOM CODE BY 'diogowermann' */
+.main__content.assets {
+    padding: 16px 32px 0 16px;
+    position: relative
+}
+
+.main__content.assets .assets__head {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    margin-right: 200px;
+    margin-bottom: 16px
+}
+
+.main__content.assets .assets__head h2 {
+    font-family: "Lato", Arial, sans-serif;
+    padding-left: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.22;
+    letter-spacing: .1px
+}
+
+.main__content.categories .assets__head .btn {
+    min-width: 168px
+}
+/* END CUSTOM */
