@@ -74,6 +74,8 @@ $hesk_settings['features'] = array(
 'can_privacy',  		/* User can use privacy tools (Anonymize tickets) */
 'can_service_msg',		/* User can manage service messages shown in customer interface */
 'can_email_tpl',		/* User can manage email templates */
+// CUSTOM CODE BY 'diogowermann'
+'can_man_assets,'       /* User can manage all assets
 );
 
 /* Set default values */
