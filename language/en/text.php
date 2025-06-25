@@ -2157,5 +2157,15 @@ $hesklang['oauth_provider_click_to_verify']='Click to verify';
 $hesklang['can_due_date']='Can set due date'; // Permission to set and modify due date
 $hesklang['can_due_date_e']='You do not have permission to set due dates';
 
+// CUSTOM CODE BY 'diogowermann'
+$hesklang['assets_management']='Assets management';
+$hesklang['components']='Components';
+$hesklang['computers']='Computers';
+$hesklang['monitors']='Monitors';
+$hesklang['printers']='Printers';
+$hesklang['departments']='Departments';
+$hesklang['customers']='Customers';
+// END CUSTOM
+
 // DO NOT CHANGE BELOW
 if (!defined('IN_SCRIPT')) die('PHP syntax OK!');
