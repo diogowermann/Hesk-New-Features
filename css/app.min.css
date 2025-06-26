@@ -810,7 +810,7 @@ a:hover {
     display: -moz-inline-stack;
     display: inline-block;
     zoom: 1;
-    *display: inline
+    display: inline
 }
 
 .selectize-control.multi .selectize-input>div {
@@ -6418,7 +6418,7 @@ p.rate {
     width: 320px
 }
 
-.category-create .category-create__select {
+.category-create .category-create__select, /*CUSTOM*/.asset-create .asset-create__select/*END*/ {
     margin-top: 24px;
     margin-bottom: 16px;
     display: -ms-flexbox;
@@ -6427,7 +6427,7 @@ p.rate {
     align-items: center
 }
 
-.category-create .category-create__select>span {
+.category-create .category-create__select>span, /*CUSTOM*/.asset-create .asset-create__select>span/*END*/ {
     margin-right: 6px;
     color: #959eb0
 }
@@ -7950,7 +7950,7 @@ p.rate {
 }
 
 .body b,
-/.main__content.emails .email__tabs .email__list .email__list_article .email__list_descr*/ .body strong {
+/*.main__content.emails .email__tabs .email__list .email__list_article .email__list_descr*/ .body strong {
     font-weight: 700
 }
 
@@ -13868,7 +13868,7 @@ strong {
     letter-spacing: .1px
 }
 
-.main__content.categories .assets__head .btn {
+.main__content.assets .assets__head .btn {
     min-width: 168px
 }
 /* END CUSTOM */
