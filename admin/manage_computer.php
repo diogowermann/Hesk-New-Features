@@ -180,7 +180,7 @@ if (hesk_SESSION('iserror')) {
             <div class="grid-2">
             <div class="form-group">
                 <label for="asset_tag">Asset Tag:</label>
-                <input type="text" id="asset_tag" name="asset_tag" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['asset_tag']); ?>">
+                <input type="text" id="asset_tag" name="asset_tag" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['asset_tag']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
             </div>
             <div class="form-group">
                 <label for="name"><?php echo $hesklang['computer_name']; ?>:<span class="important">*</span></label>
@@ -192,7 +192,7 @@ if (hesk_SESSION('iserror')) {
             <div class="grid-3">
             <div class="form-group">
                 <label for="mac"><?php echo $hesklang['mac_address']; ?>:<span class="important">*</span></label>
-                <input type="text" id="mac" name="mac" class="form-control" maxlength="17" placeholder="00:1B:44:11:3A:B7" value="<?php echo hesk_htmlspecialchars($computer['mac_address']); ?>">
+                <input type="text" id="mac" name="mac" class="form-control" maxlength="17" placeholder="00:1B:44:11:3A:B7" value="<?php echo hesk_htmlspecialchars($computer['mac_address']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
             </div>
             <div class="form-group">
                 <label for="os_name">OS Name:</label>
@@ -208,11 +208,11 @@ if (hesk_SESSION('iserror')) {
             <div class="grid-2">
             <div class="form-group">
                 <label for="purchase_date"><?php echo $hesklang['purchase_date']; ?>:</label>
-                <input type="date" id="purchase_date" name="purchase_date" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['purchase_date']); ?>">
+                <input type="date" id="purchase_date" name="purchase_date" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['purchase_date']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
             </div>
             <div class="form-group">
                 <label for="warranty_until"><?php echo $hesklang['warranty_until']; ?>:</label>
-                <input type="date" id="warranty_until" name="warranty_until" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['warranty_until']); ?>">
+                <input type="date" id="warranty_until" name="warranty_until" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['warranty_until']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
             </div>
             </div>
 
@@ -247,7 +247,7 @@ if (hesk_SESSION('iserror')) {
                 <!-- CPU -->
                 <div class="form-group">
                     <label for="cpu_select"><?php echo $hesklang['cpu']; ?>: <span class="important">*</span></label>
-                    <select name="cpu_id" id="cpu_select" class="form-control">
+                    <select name="cpu_id" id="cpu_select" class="form-control" <?php echo $editing ? 'disabled' : ''; ?>>
                         <option value="0"><?php echo $hesklang['select_cpu']; ?></option>
                         <?php while ($c = hesk_dbFetchAssoc($cpus)): ?>
                         <option value="<?php echo $c['id']; ?>" <?php if ($c['id'] == $computer['cpu_id']) echo 'selected'; ?>>
@@ -259,7 +259,7 @@ if (hesk_SESSION('iserror')) {
                 <!-- Motherboard -->
                 <div class="form-group">
                     <label for="mb_select"><?php echo $hesklang['motherboard']; ?>: <span class="important">*</span></label>
-                    <select name="mb_id" id="mb_select" class="form-control">
+                    <select name="mb_id" id="mb_select" class="form-control" <?php echo $editing ? 'disabled' : ''; ?>>
                         <option value="0"><?php echo $hesklang['select_mb']; ?></option>
                         <?php while ($m = hesk_dbFetchAssoc($mbs)): ?>
                         <option value="<?php echo $m['id']; ?>" <?php if ($m['id'] == $computer['mb_id']) echo 'selected'; ?>>
