@@ -6418,7 +6418,7 @@ p.rate {
     width: 320px
 }
 
-.category-create .category-create__select, /*CUSTOM*/.asset-create .asset-create__select/*END*/ {
+.category-create .category-create__select {
     margin-top: 24px;
     margin-bottom: 16px;
     display: -ms-flexbox;
@@ -6427,7 +6427,7 @@ p.rate {
     align-items: center
 }
 
-.category-create .category-create__select>span, /*CUSTOM*/.asset-create .asset-create__select>span/*END*/ {
+.category-create .category-create__select>span {
     margin-right: 6px;
     color: #959eb0
 }
@@ -13871,4 +13871,99 @@ strong {
 .main__content.assets .assets__head .btn {
     min-width: 168px
 }
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.computer-card {
+    display: grid;
+    grid-template-areas:
+      "mac mac"
+      "name os"
+      "cpu mb"
+      "psu ram"
+      "disk purchase"
+      "warranty customer"
+      "sector status"
+      "tag actions";
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+    padding: 0.1rem;
+}
+.computer-card .mac {
+    grid-area: mac;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+.computer-card .name {
+    grid-area: name;
+    font-size: 1.1rem;
+    color: #555;
+}
+.computer-card .os       { grid-area: os; }
+.computer-card .cpu      { grid-area: cpu; }
+.computer-card .mb       { grid-area: mb; }
+.computer-card .psu      { grid-area: psu; }
+.computer-card .ram      { grid-area: ram; }
+.computer-card .disk     { grid-area: disk; }
+.computer-card .purchase { grid-area: purchase; }
+.computer-card .warranty { grid-area: warranty; }
+.computer-card .customer { grid-area: customer; }
+.computer-card .sector   { grid-area: sector; }
+.computer-card .status   { grid-area: status; }
+.computer-card .asset-tag {
+    grid-area: tag;
+    justify-self: start;
+    font-size: 0.8rem;
+    background: #eee;
+    padding: 0.3rem 0.5rem;
+    border-radius: 2px;
+}
+.computer-card .card__actions {
+    grid-area: actions;
+    display: flex;
+    gap: 0.5rem;
+}
+.btn--primary {
+    height: auto;
+}
+.btn--delete {
+    color: #2c70a2;
+    opacity: 0.7;
+}
+.btn--delete:hover {
+    color: #2c70a2;
+    opacity: 1;
+}
+
+/* Container for multi selection asset */
+.multi-container {
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.multi-container .checkbox-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.multi-container .checkbox-item:hover {
+  background-color: #f5f5f5;
+}
+.multi-container .checkbox-item.selected {
+  background-color: #133e5e;
+}
+.multi-container .checkbox-item.selected label {
+    color: #959eb0;
+}
+/* End container for multi */
 /* END CUSTOM */

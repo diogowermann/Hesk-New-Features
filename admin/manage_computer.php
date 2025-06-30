@@ -287,7 +287,7 @@ if (hesk_SESSION('iserror')) {
             <!-- RAM -->
             <div class="form-group">
             <label><?php echo $hesklang['rams']; ?>:<span class="important">*</span></label>
-            <div class="checkbox-group ram-container">
+            <div class="checkbox-group multi-container">
                 <?php while ($r = hesk_dbFetchAssoc($rams)): ?>
                 <label><input type="checkbox" name="ram_ids[]" value="<?php echo $r['id']; ?>" <?php echo in_array($r['id'], $computer['ram_ids']) ? 'checked' : ''; ?>> <?php echo hesk_htmlspecialchars("{$r['model']} {$r['size_gb']}GB ({$r['speed_mhz']}MHz)"); ?></label>
                 <?php endwhile; ?>
@@ -297,7 +297,7 @@ if (hesk_SESSION('iserror')) {
             <!-- Disks -->
             <div class="form-group">
             <label><?php echo $hesklang['disks']; ?>:</label>
-            <div class="checkbox-group ram-container">
+            <div class="checkbox-group multi-container">
                 <?php while ($d = hesk_dbFetchAssoc($disks)): ?>
                 <label><input type="checkbox" name="disk_ids[]" value="<?php echo $d['id']; ?>" <?php echo in_array($d['id'], $computer['disk_ids']) ? 'checked' : ''; ?>> <?php echo hesk_htmlspecialchars("{$d['model']} {$d['capacity_gb']}GB [{$d['disk_type']}] "); ?></label>
                 <?php endwhile; ?>
