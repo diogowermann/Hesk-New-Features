@@ -109,7 +109,7 @@ if (hesk_SESSION('iserror')) {
         ?>
         <div class="table-wrap">
             <div class="card computer-card">
-                <div class="mac"><?php echo htmlspecialchars($row['mac_address']); ?></div>
+                <div class="mac"><?php echo strtoupper(htmlspecialchars($row['mac_address'])); ?></div>
                 <div class="name"><?php echo htmlspecialchars($row['name']); ?></div>
                 <div class="os"><strong>OS:</strong> <?php echo htmlspecialchars($row['os_name'] . ' ' . $row['os_version']); ?></div>
 

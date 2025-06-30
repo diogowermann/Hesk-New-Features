@@ -2167,7 +2167,7 @@ $hesklang['departments']='Departments';
 $hesklang['customers']='Customers';
 $hesklang['menu_computers']='Computers';
 $hesklang['asset_intro_computers']='Here you are able to manage active computers. You are able to edit
-and delete any Computer from the icons in the &quot;Actions&quot; section. Any
+and delete any Computer from the buttons. Any
 time you edit or add a new Computer, you can also add new Components directly from this page,
 but you cannot delete or edit any Component from here (enter Components menu for more info).';
 $hesklang['add_computer']='Add computer';
