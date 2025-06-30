@@ -2171,14 +2171,15 @@ and delete any Computer from the icons in the &quot;Actions&quot; section. Any
 time you edit or add a new Computer, you can also add new Components directly from this page,
 but you cannot delete or edit any Component from here (enter Components menu for more info).';
 $hesklang['add_computer']='Add computer';
-$hesklang['mac_address']='MAC address';
+$hesklang['mac_address']='MAC Address';
 $hesklang['computer_name']='Computer name';
 $hesklang['customer']='Customer';
+$hesklang['motherboard']='Motherboard';
 $hesklang['cpu']='CPU';
 $hesklang['gpu']='GPU';
-$hesklang['ram']='RAM';
-$hesklang['font']='Font';
-$hesklang['disk']='Disk';
+$hesklang['rams']='RAM';
+$hesklang['psu']='PSU';
+$hesklang['disks']='Disks';
 $hesklang['internal']='Internal';
 $hesklang['desktop']='Desktop';
 $hesklang['protected']='Protected';
@@ -2188,6 +2189,23 @@ $hesklang['dedicated']='Dedicated';
 $hesklang['empty']='Empty';
 $hesklang['no_data_found']='No data found';
 $hesklang['not_original']='This feature is not a part of the original software!';
+$hesklang['asset_not_found']='Asset not found';
+$hesklang['edit_computer']='Edit computer';
+$hesklang['create_computer']='Create computer';
+$hesklang['select_customer']='Select customer';
+$hesklang['select_cpu']='Select CPU';
+$hesklang['select_mb']='Select motherboard';
+$hesklang['select_disk']='Select disk';
+$hesklang['select_font']='Select font';
+$hesklang['create_computer']='Create computer';
+$hesklang['save_computer']='Save computer';
+$hesklang['fill_required']='Fill the required fields';
+$hesklang['select_required']='Select the required fields';
+$hesklang['computer_added']='Computer added!';
+$hesklang['computer_updated']='Computer updated!';
+$hesklang['purchase_date']='Purchase Date';
+$hesklang['warranty_until']='Warranty Until';
+$hesklang['department']='Department';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
