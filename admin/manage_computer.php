@@ -208,11 +208,11 @@ if (hesk_SESSION('iserror')) {
             <div class="grid-2">
             <div class="form-group">
                 <label for="purchase_date"><?php echo $hesklang['purchase_date']; ?>:</label>
-                <input type="date" id="purchase_date" name="purchase_date" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['purchase_date']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
+                <input type="date" id="purchase_date" name="purchase_date" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['purchase_date']); ?>" <?php echo ($editing && $computer['purchase_date']) ? 'disabled' : ''; ?>>
             </div>
             <div class="form-group">
                 <label for="warranty_until"><?php echo $hesklang['warranty_until']; ?>:</label>
-                <input type="date" id="warranty_until" name="warranty_until" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['warranty_until']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
+                <input type="date" id="warranty_until" name="warranty_until" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['warranty_until']); ?>" <?php echo ($editing && $computer['warranty_until']) ? 'disabled' : ''; ?>>
             </div>
             </div>
 
@@ -427,4 +427,5 @@ function try_save_computer() {
     hesk_process_messages($msg, 'manage_computers.php', 'SUCCESS');
     exit;
 }
-?>
+
+require_once(HESK_PATH . 'inc/footer.inc.php');
