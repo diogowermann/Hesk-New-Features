@@ -181,6 +181,9 @@ if (hesk_SESSION('iserror')) {
             <div class="form-group">
                 <label for="asset_tag">Asset Tag:</label>
                 <input type="text" id="asset_tag" name="asset_tag" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['asset_tag']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
+                <?php if ($editing): ?>
+                    <input type="hidden" name="asset_tag" value="<?php echo $computer['asset_tag']; ?>">
+                <?php endif; ?>
             </div>
             <div class="form-group">
                 <label for="name"><?php echo $hesklang['computer_name']; ?>:<span class="important">*</span></label>
@@ -193,6 +196,9 @@ if (hesk_SESSION('iserror')) {
             <div class="form-group">
                 <label for="mac"><?php echo $hesklang['mac_address']; ?>:<span class="important">*</span></label>
                 <input type="text" id="mac" name="mac" class="form-control" maxlength="17" placeholder="00:1B:44:11:3A:B7" value="<?php echo hesk_htmlspecialchars($computer['mac_address']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
+                <?php if ($editing): ?>
+                    <input type="hidden" name="mac" value="<?php echo hesk_htmlspecialchars($computer['mac_address']); ?>">
+                <?php endif; ?>
             </div>
             <div class="form-group">
                 <label for="os_name">OS Name:</label>
@@ -255,6 +261,9 @@ if (hesk_SESSION('iserror')) {
                         </option>
                         <?php endwhile; ?>
                     </select>
+                    <?php if ($editing): ?>
+                        <input type="hidden" name="cpu_id" value="<?php echo $computer['cpu_id']; ?>">
+                    <?php endif; ?>
                 </div>
                 <!-- Motherboard -->
                 <div class="form-group">
@@ -267,6 +276,9 @@ if (hesk_SESSION('iserror')) {
                         </option>
                         <?php endwhile; ?>
                     </select>
+                    <?php if ($editing): ?>
+                        <input type="hidden" name="mb_id" value="<?php echo $computer['mb_id']; ?>">
+                    <?php endif; ?>
                 </div>
                 <!-- PSU -->
                 <div class="form-group">
@@ -324,6 +336,7 @@ function try_save_computer() {
     global $dbp, $hesk_settings, $hesklang;
     hesk_token_check('POST');
     $orig_id = intval(hesk_POST('original_id', 0));
+    $editing = ($orig_id > 0);
     $data = [
         'asset_tag'      => hesk_input(hesk_POST('asset_tag')),
         'name'           => hesk_input(hesk_POST('name')),
