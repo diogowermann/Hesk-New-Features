@@ -30,27 +30,46 @@ hesk_isLoggedIn();
 /* Check permissions for this feature */
 hesk_checkPermission('can_man_assets');
 
-/* Get mac from url for editing */
-$mac = hesk_GET('mac', '');
-$computer = [];
-if ($mac) {
-    $res = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."computers` WHERE `MAC` = '".hesk_dbEscape($mac)."'");
-    $computer = hesk_dbFetchAssoc($res);
-}
-
 /* Get required database information for this feature */
-$computers = hesk_dbQuery("SELECT c.*, cpu.MODEL AS cpu_model, disk.STORAGE AS disk_storage, font.TENSION AS font_tension, u.NAME AS user_name, 
-(SELECT COALESCE(SUM(r.SIZE),0) FROM ".hesk_dbEscape($hesk_settings['db_pfix'])."computers_ram AS r WHERE FIND_IN_SET(r.RAM_ID, c.RAM_ID) ) AS total_ram_size 
-FROM ".hesk_dbEscape($hesk_settings['db_pfix'])."computers AS c LEFT JOIN ".hesk_dbEscape($hesk_settings['db_pfix'])."computers_cpu AS cpu ON c.CPU_ID = cpu.CPU_ID 
-LEFT JOIN ".hesk_dbEscape($hesk_settings['db_pfix'])."computers_disk AS disk ON c.DISK_ID = disk.DISK_ID 
-LEFT JOIN ".hesk_dbEscape($hesk_settings['db_pfix'])."computers_font AS font ON c.FONT_ID = font.FONT_ID 
-LEFT JOIN ".hesk_dbEscape($hesk_settings['db_pfix'])."user_clients AS u ON c.USER_ID = u.USER_ID WHERE c.ACTIVE = 1");
-$users = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."user_clients` WHERE `ACTIVE` = 1");
-$cpus = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."computers_cpu` WHERE `ACTIVE` = 1");
-$rams = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."computers_ram` WHERE `ACTIVE` = 1");
-$mbs = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."computers_mb` WHERE `ACTIVE` = 1");
-$fonts = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."computers_font` WHERE `ACTIVE` = 1");
-$disks = hesk_dbQuery("SELECT * FROM `".hesk_dbEscape($hesk_settings['db_pfix'])."computers_disk` WHERE `ACTIVE` = 1");
+// prefix for queries
+$dbp = hesk_dbEscape($hesk_settings['db_pfix']);
+
+$sql = "SELECT
+  c.id,
+  c.asset_tag,
+  c.mac_address,
+  c.name,
+  c.os_name,
+  c.os_version,
+  c.purchase_date,
+  c.warranty_until,
+  c.is_internal,
+  c.is_desktop,
+  c.is_secure,
+  c.is_active,
+  cpu.model       AS cpu_model,
+  mb.model        AS mb_model,
+  ps.model        AS ps_model,
+  ps.wattage_w    AS ps_watts,
+  u.name          AS user_name,
+  s.name          AS department_name,
+  GROUP_CONCAT(DISTINCT CONCAT(r.model, ' ', r.size_gb, 'GB', ' (', r.speed_mhz, 'MHz)') SEPARATOR ', ') AS ram_list,
+  GROUP_CONCAT(DISTINCT CONCAT(d.model, ' ', d.capacity_gb, 'GB', ' [', d.disk_type, ']') SEPARATOR ', ')  AS disk_list
+FROM hesk_computers AS c
+JOIN hesk_computers_cpu AS cpu ON cpu.id = c.cpu_id
+JOIN hesk_computers_mb  AS mb  ON mb.id  = c.mb_id
+LEFT JOIN hesk_computers_ps AS ps ON ps.id = c.ps_id
+LEFT JOIN hesk_computer_has_ram  AS chr ON chr.computer_id = c.id  -- Fixed table name
+LEFT JOIN hesk_computers_ram AS r   ON r.id = chr.ram_id
+LEFT JOIN hesk_computer_has_disk AS cd  ON cd.computer_id = c.id   -- Fixed table name
+LEFT JOIN hesk_computers_disk AS d   ON d.id = cd.disk_id
+LEFT JOIN hesk_customers     AS u   ON u.id = c.customer_id
+LEFT JOIN hesk_departments   AS s   ON s.id = u.department_id  -- Fixed join condition
+WHERE c.is_active = 1
+GROUP BY c.id
+ORDER BY c.name";
+$computers = hesk_dbQuery($sql);
+/* Required database info collected */
 
 /* Print header */
 require_once(HESK_PATH . 'inc/header.inc.php');
@@ -78,69 +97,50 @@ if (hesk_SESSION('iserror')) {
                 </div>
             </div>
         </h2>
-        <a href="manage_computer.php" class="btn btn btn--blue-border" ripple="ripple">
+        <a href="manage_computer.php" class="btn btn--blue-border" ripple="ripple">
             <?php echo $hesklang['add_computer']; ?>
-        </a></h2>
+        </a>
     </section>
-    <div class="table-wrap">
-        <table id="default-table" class="table sindu-table">
-            <thead>
-                <tr>
-                    <th><?php echo $hesklang['mac_address']; ?></th>
-                    <th><?php echo $hesklang['computer_name']; ?></th>
-                    <th><?php echo $hesklang['customer']; ?></th>
-                    <th><?php echo $hesklang['cpu']; ?></th>
-                    <th><?php echo $hesklang['gpu']; ?></th>
-                    <th><?php echo $hesklang['ram']; ?></th>
-                    <th><?php echo $hesklang['font']; ?></th>
-                    <th><?php echo $hesklang['disk']; ?></th>
-                    <th><?php echo $hesklang['internal']; ?></th>
-                    <th><?php echo $hesklang['desktop']; ?></th>
-                    <th><?php echo $hesklang['protected']; ?></th>
-                    <th><?php echo $hesklang['actions']; ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if (hesk_dbNumRows($computers) > 0) {
-                    while ($row = hesk_dbFetchAssoc($computers)) {
-                        echo '
-                        <tr>
-                            <td>'.htmlspecialchars($row['MAC']).'</td>
-                            <td>'.htmlspecialchars($row['NAME']).'</td>
-                            <td>'.($row['USER_ID'] ? htmlspecialchars($row['customer']) : $hesklang['empty']).'</td>
-                            <td>'.($row['CPU_ID'] ? htmlspecialchars($row['cpu']) : $hesklang['empty']).'</td>
-                            <td>'.($row['GPU'] ? $hesklang['dedicated'] : $hesklang['integrated']).'</td>
-                            <td>'.(int)$row['total_ram_size'] . 'GB' .'</td>
-                            <td>'.($row['FONT_ID'] ? ($row['font_tension']) . 'W' : $hesklang['empty']).'</td>
-                            <td>'.($row['DISK_ID'] ? htmlspecialchars($row['disk_size']) . ' GB' : $hesklang['empty']).'</td>
-                            <td>'.($row['INTERNAL'] ? $hesklang['yes'] : $hesklang['no']).'</td>
-                            <td>'.($row['DESKTOP'] ? $hesklang['yes'] : $hesklang['no']).'</td>
-                            <td>'.($row['SECURE'] ? $hesklang['yes'] : $hesklang['no']).'</td>
-                            <td>
-                                <div class="actions">
-                                    <a class="tooltip" href="manage_computer.php?mac='.urlencode($row['MAC']).'"
-                                    title="'.$hesklang['edit'].'">
-                                        <svg class="icon icon-edit-ticket">
-                                            <use xlink:href="'.HESK_PATH.'img/sprite.svg#icon-edit-ticket"></use>
-                                        </svg>
-                                    </a>
-                                    <a class="delete" href="delete_component.php?mac='.urlencode($row['MAC']).'&type=computer&token='.hesk_token_echo(0).'" onclick="return confirm(\''.$hesklang['delete_confirm'].'\');">
-                                        <svg class="icon icon-delete">
-                                            <use xlink:href="'.HESK_PATH.'img/sprite.svg#icon-delete"></use>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        ';
-                    }
-                } else {
-                    echo '<tr><td colspan="12">'.$hesklang['no_data_found'].'</td></tr>';
-                }
-                ?>
-            </tbody>
-        </table>
+
+    <div class="cards-grid">
+        <?php
+        if (hesk_dbNumRows($computers) > 0) {
+            while ($row = hesk_dbFetchAssoc($computers)) {
+        ?>
+        <div class="table-wrap">
+            <div class="card computer-card">
+                <div class="mac"><?php echo htmlspecialchars($row['mac_address']); ?></div>
+                <div class="name"><?php echo htmlspecialchars($row['name']); ?></div>
+                <div class="os"><strong>OS:</strong> <?php echo htmlspecialchars($row['os_name'] . ' ' . $row['os_version']); ?></div>
+
+                <div class="cpu"><strong>CPU:</strong> <?php echo htmlspecialchars($row['cpu_model']); ?></div>
+                <div class="mb"><strong>Motherboard:</strong> <?php echo htmlspecialchars($row['mb_model']); ?></div>
+                <div class="psu"><strong>PSU:</strong> <?php echo htmlspecialchars($row['ps_model'] . ' ' . $row['ps_watts'] . 'W'); ?></div>
+                <div class="ram"><strong>RAM:</strong> <?php echo htmlspecialchars($row['ram_list'] ?: $hesklang['empty']); ?></div>
+                <div class="disk"><strong>Disk:</strong> <?php echo htmlspecialchars($row['disk_list'] ?: $hesklang['empty']); ?></div>
+
+                <div class="purchase"><strong><?php echo $hesklang['purchase_date']; ?>:</strong> <?php echo htmlspecialchars($row['purchase_date']); ?></div>
+                <div class="warranty"><strong><?php echo $hesklang['warranty_until']; ?>:</strong> <?php echo htmlspecialchars($row['warranty_until']); ?></div>
+                <div class="customer"><strong><?php echo $hesklang['customer']; ?>:</strong> <?php echo htmlspecialchars($row['user_name'] ?: $hesklang['empty']); ?></div>
+                <div class="sector"><strong><?php echo $hesklang['department']; ?>:</strong> <?php echo htmlspecialchars($row['department_name'] ?: $hesklang['empty']); ?></div>
+                <div class="status"><strong>Status:</strong> <?php echo ($row['is_active'] ? $hesklang['yes'] : $hesklang['no']); ?></div>
+
+                <?php if ($row['asset_tag']): ?>
+                    <div class="asset-tag"><?php echo htmlspecialchars($row['asset_tag']); ?></div>
+                <?php endif; ?>
+
+                <div class="card__actions">
+                    <a href="manage_computer.php?id=<?php echo $row['id']; ?>" class="btn btn--blue-border btn--primary"><?php echo $hesklang['edit']; ?></a>
+                    <a href="delete_component.php?mac=<?php echo urlencode($row['mac_address']); ?>&amp;type=computer&amp;token=<?php hesk_token_echo(0); ?>" class="btn btn--delete" onclick="return confirm('<?php echo $hesklang['delete_confirm']; ?>')"><?php echo $hesklang['delete']; ?></a>
+                </div>
+            </div>
+        </div>
+        <?php
+            }
+        } else {
+            echo '<p>'.$hesklang['no_data_found'].'</p>';
+        }
+        ?>
     </div>
 </div>
 
