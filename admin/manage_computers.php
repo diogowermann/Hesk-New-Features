@@ -122,8 +122,8 @@ if (hesk_SESSION('iserror')) {
                 <div class="purchase"><strong><?php echo $hesklang['purchase_date']; ?>:</strong> <?php echo htmlspecialchars($row['purchase_date']); ?></div>
                 <div class="warranty"><strong><?php echo $hesklang['warranty_until']; ?>:</strong> <?php echo htmlspecialchars($row['warranty_until']); ?></div>
                 <div class="customer"><strong><?php echo $hesklang['customer']; ?>:</strong> <?php echo htmlspecialchars($row['user_name'] ?: $hesklang['empty']); ?></div>
-                <div class="sector"><strong><?php echo $hesklang['department']; ?>:</strong> <?php echo htmlspecialchars($row['department_name'] ?: $hesklang['empty']); ?></div>
-                <div class="status"><strong>Status:</strong> <?php echo ($row['is_active'] ? $hesklang['yes'] : $hesklang['no']); ?></div>
+                <div class="department"><strong><?php echo $hesklang['department']; ?>:</strong> <?php echo htmlspecialchars($row['department_name'] ?: $hesklang['empty']); ?></div>
+                <div class="security"><strong>Security:</strong> <?php echo ($row['is_secure'] ? $hesklang['on'] : $hesklang['off']); ?></div>
 
                 <?php if ($row['asset_tag']): ?>
                     <div class="asset-tag"><?php echo htmlspecialchars($row['asset_tag']); ?></div>
