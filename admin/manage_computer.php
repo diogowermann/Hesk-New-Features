@@ -306,15 +306,15 @@ if (hesk_SESSION('iserror')) {
                 </div>
 
             <!-- flags -->
-            <div class="form-group grid-3">
-            <div><label><input type="checkbox" name="is_internal" value="1" <?php echo $computer['is_internal'] ? 'checked' : ''; ?>> <?php echo $hesklang['internal']; ?></label></div>
-            <div><label><input type="checkbox" name="is_desktop" value="1" <?php echo $computer['is_desktop'] ? 'checked' : ''; ?>> <?php echo $hesklang['desktop']; ?></label></div>
-            <div><label><input type="checkbox" name="is_secure" value="1" <?php echo $computer['is_secure'] ? 'checked' : ''; ?>> <?php echo $hesklang['protected']; ?></label></div>
+            <div class="form-group grid-4">
+                <div><label><input type="checkbox" name="is_internal" value="1" <?php echo $computer['is_internal'] ? 'checked' : ''; ?>> <?php echo $hesklang['internal']; ?></label></div>
+                <div><label><input type="checkbox" name="is_desktop" value="1" <?php echo $computer['is_desktop'] ? 'checked' : ''; ?>> <?php echo $hesklang['desktop']; ?></label></div>
+                <div><label><input type="checkbox" name="is_secure" value="1" <?php echo $computer['is_secure'] ? 'checked' : ''; ?>> <?php echo $hesklang['protected']; ?></label></div>
+                <button type="submit" class="btn btn-full" ripple="ripple">
+                <?php echo $editing ? $hesklang['save_computer'] : $hesklang['create_computer']; ?>
+                </button>
             </div>
 
-            <button type="submit" class="btn btn--full" ripple="ripple">
-            <?php echo $editing ? $hesklang['save_computer'] : $hesklang['create_computer']; ?>
-            </button>
         </form>
     </div>
 </div>
