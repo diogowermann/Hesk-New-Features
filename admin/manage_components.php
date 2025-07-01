@@ -67,15 +67,15 @@ if (hesk_SESSION('iserror')) {
     <div class="component-tables">
         <!-- CPU Table -->
         <div class="table-wrap">
-            <h3>CPUs</h3>
+            <h3><?php echo $hesklang['cpu'] ?></h3>
             <div class="table table-scroll">
                 <table class="table sindu-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Model</th>
-                            <th>Cores</th>
-                            <th>Threads</th>
+                            <th><?php echo $hesklang['id'] ?></th>
+                            <th><?php echo $hesklang['model'] ?></th>
+                            <th><?php echo $hesklang['cores'] ?></th>
+                            <th><?php echo $hesklang['threads'] ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,16 +94,16 @@ if (hesk_SESSION('iserror')) {
 
         <!-- RAM Table -->
         <div class="table-wrap">
-            <h3>RAM Modules</h3>
+            <h3><?php echo $hesklang['ram_modules'] ?></h3>
             <div class="table table-scroll">
                 <table class="table sindu-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Model</th>
-                            <th>Size (GB)</th>
-                            <th>Speed (MHz)</th>
-                            <th>Type</th>
+                            <th><?php echo $hesklang['id'] ?></th>
+                            <th><?php echo $hesklang['model'] ?></th>
+                            <th><?php echo $hesklang['size_gb'] ?></th>
+                            <th><?php echo $hesklang['speed_mhz'] ?></th>
+                            <th><?php echo $hesklang['type'] ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -123,18 +123,18 @@ if (hesk_SESSION('iserror')) {
 
         <!-- Motherboard Table -->
         <div class="table-wrap">
-            <h3>Motherboards</h3>
+            <h3><?php echo $hesklang['motherboard'] ?></h3>
             <div class="table table-scroll">
                 <table class="table sindu-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Model</th>
-                            <th>RAM Slots</th>
-                            <th>Type</th>
-                            <th>Max RAM (GB)</th>
-                            <th>Max Speed (MHz)</th>
-                            <th>Chipset</th>
+                            <th><?php echo $hesklang['id'] ?></th>
+                            <th><?php echo $hesklang['model'] ?></th>
+                            <th><?php echo $hesklang['ram_slots'] ?></th>
+                            <th><?php echo $hesklang['type'] ?></th>
+                            <th><?php echo $hesklang['max_ram_gb'] ?></th>
+                            <th><?php echo $hesklang['speed_mhz'] ?></th>
+                            <th><?php echo $hesklang['chipset'] ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -156,17 +156,17 @@ if (hesk_SESSION('iserror')) {
 
         <!-- Disk Table -->
         <div class="table-wrap">
-            <h3>Disks</h3>
+            <h3><?php echo $hesklang['disks'] ?></h3>
             <div class="table table-scroll">
                 <table class="table sindu-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Model</th>
-                            <th>Type</th>
-                            <th>Interface</th>
-                            <th>Speed (RPM)</th>
-                            <th>Capacity (GB)</th>
+                            <th><?php echo $hesklang['id'] ?></th>
+                            <th><?php echo $hesklang['model'] ?></th>
+                            <th><?php echo $hesklang['type'] ?></th>
+                            <th><?php echo $hesklang['interface'] ?></th>
+                            <th><?php echo $hesklang['speed_rpm'] ?></th>
+                            <th><?php echo $hesklang['capacity_gb'] ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -187,15 +187,15 @@ if (hesk_SESSION('iserror')) {
 
         <!-- PSU Table -->
         <div class="table-wrap">
-            <h3>Power Supplies</h3>
+            <h3><?php echo $hesklang['power_supplies'] ?></h3>
             <div class="table table-scroll">
                 <table class="table sindu-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Model</th>
-                            <th>Wattage (W)</th>
-                            <th>Bivolt</th>
+                            <th><?php echo $hesklang['id'] ?></th>
+                            <th><?php echo $hesklang['model'] ?></th>
+                            <th><?php echo $hesklang['wattage'] ?></th>
+                            <th><?php echo $hesklang['bivolt'] ?></th>
                         </tr>
                     </thead>
                     <tbody>

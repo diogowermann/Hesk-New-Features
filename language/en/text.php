@@ -2206,6 +2206,23 @@ $hesklang['computer_updated']='Computer updated!';
 $hesklang['purchase_date']='Purchase Date';
 $hesklang['warranty_until']='Warranty Until';
 $hesklang['department']='Department';
+$hesklang['model']='Model';
+$hesklang['cores']='Cores';
+$hesklang['threads']='Threads';
+$hesklang['size_gb']='Size (GB)';
+$hesklang['speed_mhz']='Speed (MHz)';
+$hesklang['type']='Type';
+$hesklang['interface']='Interface';
+$hesklang['capacity_gb']='Capacity (GB)';
+$hesklang['speed_rpm']='Speed (RPM)';
+$hesklang['max_ram_gb']='Max RAM (GB)';
+$hesklang['ram_slots']='RAM Slots';
+$hesklang['max_speed']='Max Speed (MHz)';
+$hesklang['chipset']='Chipset';
+$hesklang['wattage']='Wattage (W)';
+$hesklang['bivolt']='Bivolt';
+$hesklang['ram_modules']='RAM Modules';
+$hesklang['power_supplies']='Power Supllies';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
