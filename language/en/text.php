@@ -2224,6 +2224,9 @@ $hesklang['bivolt']='Bivolt';
 $hesklang['ram_modules']='RAM Modules';
 $hesklang['power_supplies']='Power Supllies';
 $hesklang['add_new_component']='Add new component';
+$hesklang['edit_component']='Edit component';
+$hesklang['view_component']='View component';
+$hesklang['create_component']='Create component';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
