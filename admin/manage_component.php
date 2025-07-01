@@ -38,7 +38,7 @@ $types = array(
     'cpu'         => 'cpu',
     'ram'         => 'ram',
     'motherboard' => 'mb',
-    'font'        => 'ps',
+    'psu'         => 'ps',
     'disk'        => 'disk'
 ); 
 $type = $types[$type];
@@ -182,7 +182,7 @@ if (hesk_SESSION('iserror')) {
                     <?php
                     break;
 
-                case 'motherboard':
+                case 'mb':
                     ?>
                     <div class="form-group">
                         <label for="model"><?php echo $hesklang['model']; ?></label>
@@ -227,7 +227,7 @@ if (hesk_SESSION('iserror')) {
                     <?php
                     break;
 
-                case 'psu':
+                case 'ps':
                     ?>
                     <div class="form-group">
                         <label for="model"><?php echo $hesklang['model']; ?></label>

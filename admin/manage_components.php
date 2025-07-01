@@ -81,7 +81,7 @@ if (hesk_SESSION('iserror')) {
                                 <td><?php echo htmlspecialchars($cpu['threads']); ?></td>
                                 <td>
                                     <div class="actions">
-                                        <a class="action-btn edit"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn edit" href="manage_component.php?type=cpu&id<?php echo $cpu['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
                                         <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
                                     </div>
@@ -127,7 +127,7 @@ if (hesk_SESSION('iserror')) {
                                 <td><?php echo htmlspecialchars($ram['ram_type']); ?></td>
                                 <td>
                                     <div class="actions">
-                                        <a class="action-btn edit"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn edit" href="manage_component.php?type=ram&id<?php echo $ram['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
                                         <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
                                     </div>
@@ -177,7 +177,7 @@ if (hesk_SESSION('iserror')) {
                                 <td><?php echo htmlspecialchars($mb['chipset']); ?></td>
                                 <td>
                                     <div class="actions">
-                                        <a class="action-btn edit"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn edit" href="manage_component.php?type=motherboard&id<?php echo $mb['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
                                         <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
                                     </div>
@@ -225,7 +225,7 @@ if (hesk_SESSION('iserror')) {
                                 <td><?php echo htmlspecialchars($disk['capacity_gb']); ?></td>
                                 <td>
                                     <div class="actions">
-                                        <a class="action-btn edit" tooltype="<?php echo $hesklang['edit'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn edit" href="manage_component.php?type=disk&id<?php echo $disk['id'] ?>"<?php echo $hesklang['edit'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
                                         <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
                                     </div>
@@ -269,7 +269,7 @@ if (hesk_SESSION('iserror')) {
                                 <td><?php echo $psu['is_bivolt'] ? 'Yes' : 'No'; ?></td>
                                 <td>
                                     <div class="actions">
-                                        <a class="action-btn edit"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn edit" href="manage_component.php?type=psu&id<?php echo $psu['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
                                         <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>                                
                                     </div>
