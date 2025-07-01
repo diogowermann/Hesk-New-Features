@@ -2227,6 +2227,7 @@ $hesklang['add_new_component']='Add new component';
 $hesklang['edit_component']='Edit component';
 $hesklang['view_component']='View component';
 $hesklang['create_component']='Create component';
+$hesklang['components']='Components';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
