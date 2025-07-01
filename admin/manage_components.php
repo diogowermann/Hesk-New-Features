@@ -48,80 +48,6 @@ if (hesk_SESSION('iserror')) {
     hesk_handle_messages();
 }
 ?>
-<style>
-.component-tables {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-    gap: 20px;
-}
-.table-scroll {
-    max-height: 500px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #cbd5e0 #f1f5f9;
-}
-.table-scroll::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-.table-scroll::-webkit-scrollbar-thumb {
-    background-color: #cbd5e0;
-    border-radius: 4px;
-}
-.table-scroll::-webkit-scrollbar-track {
-    background-color: #f1f5f9;
-}
-.table-scroll table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.table-wrap .table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding: 0 1rem;
-}
-.table-wrap .table-header h3 {
-    font-size: 1.4rem;
-}
-.actions {
-    display: flex;
-    gap: 8px;
-}
-.action-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-}
-.action-btn:hover {
-    cursor: pointer;
-}
-.action-btn.edit {
-    color: #0066cc;
-}
-.action-btn.view {
-    color: #00a651;
-}
-.action-btn.delete {
-    color: #cc0000;
-}
-.action-btn svg {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
-}
-.no-data {
-    text-align: center;
-    padding: 20px;
-    color: #a0aec0;
-}
-</style>
-
 <div class="main__content assets">
     <section class="assets__head">
         <h2><?php echo $hesklang['component_visualization'] ?? 'Component Visualization'; ?></h2>
@@ -299,16 +225,6 @@ if (hesk_SESSION('iserror')) {
                                 <td><?php echo htmlspecialchars($disk['capacity_gb']); ?></td>
                                 <td>
                                     <div class="actions">
-                                        <div class="tooltype right out-close">
-                                            <svg class="icon icon-info">
-                                                <use xlink:href="<?php echo HESK_PATH; ?>img/sprite.svg#icon-info"></use>
-                                            </svg>
-                                            <div class="tooltype__content">
-                                                <div class="tooltype__wrapper">
-                                                    <?php echo $hesklang['asset_intro_computers']; ?>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <a class="action-btn edit" tooltype="<?php echo $hesklang['edit'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
                                         <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
