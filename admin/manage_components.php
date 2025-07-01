@@ -49,9 +49,27 @@ if (hesk_SESSION('iserror')) {
 }
 ?>
 <style>
+.component-tables {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 20px;
+}
 .table-scroll {
     max-height: 500px;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f1f5f9;
+}
+.table-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.table-scroll::-webkit-scrollbar-thumb {
+    background-color: #cbd5e0;
+    border-radius: 4px;
+}
+.table-scroll::-webkit-scrollbar-track {
+    background-color: #f1f5f9;
 }
 .table-scroll table {
     width: 100%;
@@ -60,12 +78,47 @@ if (hesk_SESSION('iserror')) {
 .table-wrap .table-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
     align-items: center;
+    margin-bottom: 1rem;
     padding: 0 1rem;
 }
 .table-wrap .table-header h3 {
     font-size: 1.4rem;
+}
+.actions {
+    display: flex;
+    gap: 8px;
+}
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+.action-btn:hover {
+    cursor: pointer;
+}
+.action-btn.edit {
+    color: #0066cc;
+}
+.action-btn.view {
+    color: #00a651;
+}
+.action-btn.delete {
+    color: #cc0000;
+}
+.action-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #a0aec0;
 }
 </style>
 
@@ -89,17 +142,31 @@ if (hesk_SESSION('iserror')) {
                             <th><?php echo $hesklang['model'] ?></th>
                             <th><?php echo $hesklang['cores'] ?></th>
                             <th><?php echo $hesklang['threads'] ?></th>
+                            <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($cpu = hesk_dbFetchAssoc($cpus)): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($cpu['id']); ?></td>
-                            <td><?php echo htmlspecialchars($cpu['model']); ?></td>
-                            <td><?php echo htmlspecialchars($cpu['cores']); ?></td>
-                            <td><?php echo htmlspecialchars($cpu['threads']); ?></td>
-                        </tr>
-                        <?php endwhile; ?>
+                        <?php if (hesk_dbNumRows($cpus) > 0): ?>
+                            <?php while ($cpu = hesk_dbFetchAssoc($cpus)): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($cpu['id']); ?></td>
+                                <td><?php echo htmlspecialchars($cpu['model']); ?></td>
+                                <td><?php echo htmlspecialchars($cpu['cores']); ?></td>
+                                <td><?php echo htmlspecialchars($cpu['threads']); ?></td>
+                                <td>
+                                    <div class="actions">
+                                        <a class="action-btn edit"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
+                                        <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -120,18 +187,32 @@ if (hesk_SESSION('iserror')) {
                             <th><?php echo $hesklang['size_gb'] ?></th>
                             <th><?php echo $hesklang['speed_mhz'] ?></th>
                             <th><?php echo $hesklang['type'] ?></th>
+                            <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($ram = hesk_dbFetchAssoc($rams)): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($ram['id']); ?></td>
-                            <td><?php echo htmlspecialchars($ram['model']); ?></td>
-                            <td><?php echo htmlspecialchars($ram['size_gb']); ?></td>
-                            <td><?php echo htmlspecialchars($ram['speed_mhz']); ?></td>
-                            <td><?php echo htmlspecialchars($ram['ram_type']); ?></td>
-                        </tr>
-                        <?php endwhile; ?>
+                        <?php if (hesk_dbNumRows($rams) > 0): ?>
+                            <?php while ($ram = hesk_dbFetchAssoc($rams)): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($ram['id']); ?></td>
+                                <td><?php echo htmlspecialchars($ram['model']); ?></td>
+                                <td><?php echo htmlspecialchars($ram['size_gb']); ?></td>
+                                <td><?php echo htmlspecialchars($ram['speed_mhz']); ?></td>
+                                <td><?php echo htmlspecialchars($ram['ram_type']); ?></td>
+                                <td>
+                                    <div class="actions">
+                                        <a class="action-btn edit"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
+                                        <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -154,20 +235,34 @@ if (hesk_SESSION('iserror')) {
                             <th><?php echo $hesklang['max_ram_gb'] ?></th>
                             <th><?php echo $hesklang['speed_mhz'] ?></th>
                             <th><?php echo $hesklang['chipset'] ?></th>
+                            <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($mb = hesk_dbFetchAssoc($mbs)): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($mb['id']); ?></td>
-                            <td><?php echo htmlspecialchars($mb['model']); ?></td>
-                            <td><?php echo htmlspecialchars($mb['ram_slots']); ?></td>
-                            <td><?php echo htmlspecialchars($mb['ram_type']); ?></td>
-                            <td><?php echo htmlspecialchars($mb['ram_max_storage_gb']); ?></td>
-                            <td><?php echo htmlspecialchars($mb['ram_max_speed_mhz']); ?></td>
-                            <td><?php echo htmlspecialchars($mb['chipset']); ?></td>
-                        </tr>
-                        <?php endwhile; ?>
+                        <?php if (hesk_dbNumRows($mbs) > 0): ?>
+                            <?php while ($mb = hesk_dbFetchAssoc($mbs)): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($mb['id']); ?></td>
+                                <td><?php echo htmlspecialchars($mb['model']); ?></td>
+                                <td><?php echo htmlspecialchars($mb['ram_slots']); ?></td>
+                                <td><?php echo htmlspecialchars($mb['ram_type']); ?></td>
+                                <td><?php echo htmlspecialchars($mb['ram_max_storage_gb']); ?></td>
+                                <td><?php echo htmlspecialchars($mb['ram_max_speed_mhz']); ?></td>
+                                <td><?php echo htmlspecialchars($mb['chipset']); ?></td>
+                                <td>
+                                    <div class="actions">
+                                        <a class="action-btn edit"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
+                                        <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="8" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -189,19 +284,43 @@ if (hesk_SESSION('iserror')) {
                             <th><?php echo $hesklang['interface'] ?></th>
                             <th><?php echo $hesklang['speed_rpm'] ?></th>
                             <th><?php echo $hesklang['capacity_gb'] ?></th>
+                            <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($disk = hesk_dbFetchAssoc($disks)): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($disk['id']); ?></td>
-                            <td><?php echo htmlspecialchars($disk['model']); ?></td>
-                            <td><?php echo htmlspecialchars($disk['disk_type']); ?></td>
-                            <td><?php echo htmlspecialchars($disk['interface']); ?></td>
-                            <td><?php echo htmlspecialchars($disk['speed_rpm']); ?></td>
-                            <td><?php echo htmlspecialchars($disk['capacity_gb']); ?></td>
-                        </tr>
-                        <?php endwhile; ?>
+                        <?php if (hesk_dbNumRows($disks) > 0): ?>
+                            <?php while ($disk = hesk_dbFetchAssoc($disks)): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($disk['id']); ?></td>
+                                <td><?php echo htmlspecialchars($disk['model']); ?></td>
+                                <td><?php echo htmlspecialchars($disk['disk_type']); ?></td>
+                                <td><?php echo htmlspecialchars($disk['interface']); ?></td>
+                                <td><?php echo htmlspecialchars($disk['speed_rpm']); ?></td>
+                                <td><?php echo htmlspecialchars($disk['capacity_gb']); ?></td>
+                                <td>
+                                    <div class="actions">
+                                        <div class="tooltype right out-close">
+                                            <svg class="icon icon-info">
+                                                <use xlink:href="<?php echo HESK_PATH; ?>img/sprite.svg#icon-info"></use>
+                                            </svg>
+                                            <div class="tooltype__content">
+                                                <div class="tooltype__wrapper">
+                                                    <?php echo $hesklang['asset_intro_computers']; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a class="action-btn edit" tooltype="<?php echo $hesklang['edit'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
+                                        <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="7" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -221,17 +340,31 @@ if (hesk_SESSION('iserror')) {
                             <th><?php echo $hesklang['model'] ?></th>
                             <th><?php echo $hesklang['wattage'] ?></th>
                             <th><?php echo $hesklang['bivolt'] ?></th>
+                            <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($psu = hesk_dbFetchAssoc($psus)): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($psu['id']); ?></td>
-                            <td><?php echo htmlspecialchars($psu['model']); ?></td>
-                            <td><?php echo htmlspecialchars($psu['wattage_w']); ?></td>
-                            <td><?php echo $psu['is_bivolt'] ? 'Yes' : 'No'; ?></td>
-                        </tr>
-                        <?php endwhile; ?>
+                        <?php if (hesk_dbNumRows($psus) > 0): ?>
+                            <?php while ($psu = hesk_dbFetchAssoc($psus)): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($psu['id']); ?></td>
+                                <td><?php echo htmlspecialchars($psu['model']); ?></td>
+                                <td><?php echo htmlspecialchars($psu['wattage_w']); ?></td>
+                                <td><?php echo $psu['is_bivolt'] ? 'Yes' : 'No'; ?></td>
+                                <td>
+                                    <div class="actions">
+                                        <a class="action-btn edit"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn view"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
+                                        <a class="action-btn delete"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>                                
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
