@@ -2223,6 +2223,7 @@ $hesklang['wattage']='Wattage (W)';
 $hesklang['bivolt']='Bivolt';
 $hesklang['ram_modules']='RAM Modules';
 $hesklang['power_supplies']='Power Supllies';
+$hesklang['add_new_component']='Add new component';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW

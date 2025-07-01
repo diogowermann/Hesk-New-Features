@@ -57,6 +57,16 @@ if (hesk_SESSION('iserror')) {
     width: 100%;
     border-collapse: collapse;
 }
+.table-wrap .table-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    align-items: center;
+    padding: 0 1rem;
+}
+.table-wrap .table-header h3 {
+    font-size: 1.4rem;
+}
 </style>
 
 <div class="main__content assets">
@@ -67,7 +77,10 @@ if (hesk_SESSION('iserror')) {
     <div class="component-tables">
         <!-- CPU Table -->
         <div class="table-wrap">
-            <h3><?php echo $hesklang['cpu'] ?></h3>
+            <div class="table-header">
+                <h3><?php echo $hesklang['cpu'] ?></h3>
+                <button class="btn btn--blue-border"><?php echo $hesklang['add_new_component'] ?></button>
+            </div>
             <div class="table table-scroll">
                 <table class="table sindu-table">
                     <thead>
@@ -94,7 +107,10 @@ if (hesk_SESSION('iserror')) {
 
         <!-- RAM Table -->
         <div class="table-wrap">
-            <h3><?php echo $hesklang['ram_modules'] ?></h3>
+            <div class="table-header">
+                <h3><?php echo $hesklang['ram_modules'] ?></h3>
+                <button class="btn btn--blue-border"><?php echo $hesklang['add_new_component'] ?></button>
+            </div>
             <div class="table table-scroll">
                 <table class="table sindu-table">
                     <thead>
@@ -123,7 +139,10 @@ if (hesk_SESSION('iserror')) {
 
         <!-- Motherboard Table -->
         <div class="table-wrap">
-            <h3><?php echo $hesklang['motherboard'] ?></h3>
+            <div class="table-header">
+                <h3><?php echo $hesklang['motherboard'] ?></h3>
+                <button class="btn btn--blue-border"><?php echo $hesklang['add_new_component'] ?></button>
+            </div>
             <div class="table table-scroll">
                 <table class="table sindu-table">
                     <thead>
@@ -156,7 +175,10 @@ if (hesk_SESSION('iserror')) {
 
         <!-- Disk Table -->
         <div class="table-wrap">
-            <h3><?php echo $hesklang['disks'] ?></h3>
+            <div class="table-header">
+                <h3><?php echo $hesklang['disks'] ?></h3>
+                <button class="btn btn--blue-border"><?php echo $hesklang['add_new_component'] ?></button>
+            </div>
             <div class="table table-scroll">
                 <table class="table sindu-table">
                     <thead>
@@ -187,7 +209,10 @@ if (hesk_SESSION('iserror')) {
 
         <!-- PSU Table -->
         <div class="table-wrap">
-            <h3><?php echo $hesklang['power_supplies'] ?></h3>
+            <div class="table-header">
+                <h3><?php echo $hesklang['power_supplies'] ?></h3>
+                <button class="btn btn--blue-border"><?php echo $hesklang['add_new_component'] ?></button>
+            </div>
             <div class="table table-scroll">
                 <table class="table sindu-table">
                     <thead>
