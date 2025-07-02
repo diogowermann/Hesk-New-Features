@@ -2228,6 +2228,15 @@ $hesklang['edit_component']='Edit component';
 $hesklang['view_component']='View component';
 $hesklang['create_component']='Create component';
 $hesklang['components']='Components';
+$hesklang['ram_max_storage_gb']='Max RAM (GB)';
+$hesklang['ram_max_speed_mhz']='Max RAM Speed (MHz)';
+$hesklang['network_iface']='Network Interface';
+$hesklang['usb_ports']='Quantity of USB Ports';
+$hesklang['video_ports']='Video Ports';
+$hesklang['storage_ifaces']='Types of Storage Interfaces';
+$hesklang['is_bivolt']='Bivolt';
+$hesklang['wattage_w']='Wattage (W)';
+$hesklang['create']='Create';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
