@@ -15,7 +15,7 @@ $hesk_settings['admin_css_url']='https://www.example.com/hesk-style.css';
 
 // --> Language settings
 $hesk_settings['can_sel_lang']=0;
-$hesk_settings['language']='Português Brasileiro';
+$hesk_settings['language']='English';
 $hesk_settings['languages']=array(
 'English' => array('folder'=>'en','hr'=>'------ Reply above this line ------'),
 'Português Brasileiro' => array('folder'=>'pt-BR','hr'=>'------ Responda acima desta linha ------'),
