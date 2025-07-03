@@ -58,7 +58,7 @@ if (hesk_SESSION('iserror')) {
         <div class="table-wrap">
             <div class="table-header">
                 <h3><?php echo $hesklang['cpu'] ?></h3>
-                <a class="btn btn--blue-border" href="manage_component.php?&type=cpu"><?php echo $hesklang['add_new_component'] ?></a>
+                <a class="btn btn--blue-border" href="manage_component.php?type=cpu"><?php echo $hesklang['add_new_component'] ?></a>
             </div>
             <div class="table table-scroll">
                 <table class="table sindu-table">
@@ -102,7 +102,7 @@ if (hesk_SESSION('iserror')) {
         <div class="table-wrap">
             <div class="table-header">
                 <h3><?php echo $hesklang['ram_modules'] ?></h3>
-                <a class="btn btn--blue-border"  href="manage_component.php?&type=ram"><?php echo $hesklang['add_new_component'] ?></a>
+                <a class="btn btn--blue-border"  href="manage_component.php?type=ram"><?php echo $hesklang['add_new_component'] ?></a>
             </div>
             <div class="table table-scroll">
                 <table class="table sindu-table">
@@ -148,7 +148,7 @@ if (hesk_SESSION('iserror')) {
         <div class="table-wrap">
             <div class="table-header">
                 <h3><?php echo $hesklang['motherboard'] ?></h3>
-                <a class="btn btn--blue-border"  href="manage_component.php?&type=motherboard"><?php echo $hesklang['add_new_component'] ?></a>
+                <a class="btn btn--blue-border"  href="manage_component.php?type=motherboard"><?php echo $hesklang['add_new_component'] ?></a>
             </div>
             <div class="table table-scroll">
                 <table class="table sindu-table">
@@ -198,7 +198,7 @@ if (hesk_SESSION('iserror')) {
         <div class="table-wrap">
             <div class="table-header">
                 <h3><?php echo $hesklang['disks'] ?></h3>
-                <a class="btn btn--blue-border"  href="manage_component.php?&type=disk"><?php echo $hesklang['add_new_component'] ?></a>
+                <a class="btn btn--blue-border"  href="manage_component.php?type=disk"><?php echo $hesklang['add_new_component'] ?></a>
             </div>
             <div class="table table-scroll">
                 <table class="table sindu-table">
@@ -246,7 +246,7 @@ if (hesk_SESSION('iserror')) {
         <div class="table-wrap">
             <div class="table-header">
                 <h3><?php echo $hesklang['power_supplies'] ?></h3>
-                <a class="btn btn--blue-border"  href="manage_component.php?&type=psu"><?php echo $hesklang['add_new_component'] ?></a>
+                <a class="btn btn--blue-border"  href="manage_component.php?type=psu"><?php echo $hesklang['add_new_component'] ?></a>
             </div>
             <div class="table table-scroll">
                 <table class="table sindu-table">
