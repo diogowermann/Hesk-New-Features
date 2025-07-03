@@ -13881,22 +13881,54 @@ strong {
 .computer-card {
     display: grid;
     grid-template-areas:
-      "mac mac"
+      "mac alert"
       "name os"
       "cpu mb"
-      "psu ram"
-      "disk purchase"
-      "warranty customer"
-      "department status"
+      "disk ram"
+      "purchase warranty"
+      "department customer"
+      "psu status"
       "tag actions";
     grid-template-columns: 1fr 1fr;
     gap: 0.25rem;
     padding: 0.1rem;
+    overflow: visible;
 }
 .computer-card .mac {
     grid-area: mac;
     font-size: 1.3rem;
     font-weight: bold;
+}
+.computer-card .alert {
+    grid-area: alert;
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+}
+.alert .alert-icon {
+    cursor: help;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0.1rem;
+}
+.alert .alert-tooltip {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 100;
+    min-width: 200px;
+    text-align: left;
+    font-weight: normal;
+    font-size: 0.9rem;
+}
+.computer-card .alert:hover .alert-tooltip {
+    display: block;
 }
 .computer-card .name {
     grid-area: name;
@@ -13912,7 +13944,7 @@ strong {
 .computer-card .purchase { grid-area: purchase; }
 .computer-card .warranty { grid-area: warranty; }
 .computer-card .customer { grid-area: customer; }
-.computer-card .sector   { grid-area: sector; }
+.computer-card .department   { grid-area: department; }
 .computer-card .status   { grid-area: status; }
 .computer-card .asset-tag {
     grid-area: tag;
