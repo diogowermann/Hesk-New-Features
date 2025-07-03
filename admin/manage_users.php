@@ -75,7 +75,8 @@ $hesk_settings['features'] = array(
 'can_service_msg',		/* User can manage service messages shown in customer interface */
 'can_email_tpl',		/* User can manage email templates */
 // CUSTOM CODE BY 'diogowermann'
-'can_man_assets,'       /* User can manage all assets
+'can_man_assets,',      /* User can manage all assets available */
+// END CUSTOM
 );
 
 /* Set default values */
