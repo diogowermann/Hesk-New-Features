@@ -36,7 +36,7 @@ $viewing = ($do === 'view');
 $deleting = ($do === 'delete'); 
 
 // Get type to know wich form to display
-$type = hesk_GET('type', '');
+$type_param = $_SERVER['REQUEST_METHOD'] === 'POST' ? hesk_POST('type', '') : hesk_GET('type', '');
 $types = array(
     'cpu'         => 'cpu',
     'ram'         => 'ram',
@@ -44,7 +44,11 @@ $types = array(
     'psu'         => 'ps',
     'disk'        => 'disk'
 ); 
-$type = $types[$type];
+if (!isset($types[$type_param])) {
+    hesk_process_messages('Tipo de componente inválido.', 'manage_components.php', 'ERROR');
+    exit;
+}
+$type = $types[$type_param];
 
 // Prepare default values
 $default_values = [];
@@ -171,6 +175,7 @@ if (hesk_SESSION('iserror')) {
         <form method="post" action="manage_component.php" class="form grid-form">
             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
             <input type="hidden" name="original_id" value="<?php echo $id; ?>">
+            <input type="hidden" name="type" value="<?php echo htmlspecialchars($type_param); ?>">
             <?php
             switch ($type) {
                 case 'cpu':
@@ -298,23 +303,23 @@ if (hesk_SESSION('iserror')) {
                             <label for="video_ports"><?php echo $hesklang['video_ports']; ?></label>
                             <div class="flex-options">
                                 <label>
-                                    <input type="checkbox" name="video_ports" value="HDMI" <?php if ($default_values['video_ports'] === 'HDMI') echo 'checked'; ?> required>
+                                    <input type="checkbox" name="video_ports[]" value="HDMI" <?php if ($default_values['video_ports'] === 'HDMI') echo 'checked'; ?> required>
                                     HDMI
                                 </label>
                                 <label>
-                                    <input type="checkbox" name="video_ports" value="DisplayPort" <?php if ($default_values['video_ports'] === 'DisplayPort') echo 'checked'; ?>>
+                                    <input type="checkbox" name="video_ports[]" value="DisplayPort" <?php if ($default_values['video_ports'] === 'DisplayPort') echo 'checked'; ?>>
                                     DisplayPort
                                 </label>
                                 <label>
-                                    <input type="checkbox" name="video_ports" value="VGA" <?php if ($default_values['video_ports'] === 'VGA') echo 'checked'; ?>>
+                                    <input type="checkbox" name="video_ports[]" value="VGA" <?php if ($default_values['video_ports'] === 'VGA') echo 'checked'; ?>>
                                     VGA
                                 </label>
                                 <label>
-                                    <input type="checkbox" name="video_ports" value="DVI" <?php if ($default_values['video_ports'] === 'DVI') echo 'checked'; ?>>
+                                    <input type="checkbox" name="video_ports[]" value="DVI" <?php if ($default_values['video_ports'] === 'DVI') echo 'checked'; ?>>
                                     DVI
                                 </label>
                                 <label>
-                                    <input type="checkbox" name="video_ports" value="USB-C" <?php if ($default_values['video_ports'] === 'USB-C') echo 'checked'; ?>>
+                                    <input type="checkbox" name="video_ports[]" value="USB-C" <?php if ($default_values['video_ports'] === 'USB-C') echo 'checked'; ?>>
                                     USB-C
                                 </label>
                             </div>
@@ -329,11 +334,11 @@ if (hesk_SESSION('iserror')) {
                             <label for="network_iface"><?php echo $hesklang['network_iface']; ?></label>
                             <div class="flex-options">
                                 <label>
-                                    <input type="checkbox" name="network_iface" value="Ethernet Cable" <?php if (strpos($default_values['network_iface'], 'Ethernet Cable') !== false) echo 'checked'; ?>>
+                                    <input type="checkbox" name="network_iface[]" value="Ethernet Cable" <?php if (strpos($default_values['network_iface'], 'Ethernet Cable') !== false) echo 'checked'; ?>>
                                     Ethernet Cable
                                 </label>
                                 <label>
-                                    <input type="checkbox" name="network_iface" value="Wireless" <?php if (strpos($default_values['network_iface'], 'Wireless') !== false) echo 'checked'; ?>>
+                                    <input type="checkbox" name="network_iface[]" value="Wireless" <?php if (strpos($default_values['network_iface'], 'Wireless') !== false) echo 'checked'; ?>>
                                     Wireless
                                 </label>
                             </div>                    
@@ -365,15 +370,15 @@ if (hesk_SESSION('iserror')) {
                             <label for="storage_ifaces"><?php echo $hesklang['storage_ifaces']; ?></label>
                             <div class="flex-options">
                                 <label>
-                                    <input type="checkbox" name="storage_ifaces" value="SATA" <?php if (strpos($default_values['storage_ifaces'], 'SATA') !== false) echo 'checked'; ?>>
+                                    <input type="checkbox" name="storage_ifaces[]" value="SATA" <?php if (strpos($default_values['storage_ifaces'], 'SATA') !== false) echo 'checked'; ?>>
                                     SATA
                                 </label>
                                 <label>
-                                    <input type="checkbox" name="storage_ifaces" value="SAS" <?php if (strpos($default_values['storage_ifaces'], 'SAS') !== false) echo 'checked'; ?>>
+                                    <input type="checkbox" name="storage_ifaces[]" value="SAS" <?php if (strpos($default_values['storage_ifaces'], 'SAS') !== false) echo 'checked'; ?>>
                                     SAS
                                 </label>
                                 <label>
-                                    <input type="checkbox" name="storage_ifaces" value="NVMe" <?php if (strpos($default_values['storage_ifaces'], 'NVMe') !== false) echo 'checked'; ?>>
+                                    <input type="checkbox" name="storage_ifaces[]" value="NVMe" <?php if (strpos($default_values['storage_ifaces'], 'NVMe') !== false) echo 'checked'; ?>>
                                     NVMe
                                 </label>
                             </div>
@@ -482,5 +487,135 @@ if (hesk_SESSION('iserror')) {
 
 <?php
 function try_save_component() {
+    global $dbp, $type, $hesklang, $editing;
+    hesk_token_check('POST');
+
+    $orig_id = intval(hesk_POST('original_id', 0));
+    $data      = [];
+    $required  = []; 
+    
+    // Determine if editing based on POSTed id if $editing is not set
+    if (!isset($editing) || !$editing) {
+        $editing = ($orig_id > 0);
+    }
+
+    switch ($type) {
+        case 'cpu':
+            $data = [
+                'model'   => hesk_input(hesk_POST('model')),
+                'cores'   => intval(hesk_POST('cores', 0)),
+                'threads' => intval(hesk_POST('threads', 0)),
+            ];
+            $required = ['model'];
+            break;
+
+        case 'disk':
+            $data = [
+                'model'       => hesk_input(hesk_POST('model')),
+                'disk_type'   => hesk_POST('disk_type'),
+                'interface'   => hesk_POST('interface'),
+                'speed_rpm'   => hesk_POST('speed_rpm') === '' ? null : intval(hesk_POST('speed_rpm')),
+                'capacity_gb' => intval(hesk_POST('capacity_gb', 0)),
+            ];
+            $required = ['model', 'capacity_gb'];
+            break;
+
+        case 'mb':
+            // helper to support multi-select checkbox/radio groups
+            $csv = function ($key)
+            {
+                if (!isset($_POST[$key])) {
+                    return '';
+                }
+                return is_array($_POST[$key]) ? implode(',', array_map('hesk_input', $_POST[$key])) : hesk_input($_POST[$key]);
+            };
+
+            $data = [
+                'model'               => hesk_input(hesk_POST('model')),
+                'ram_slots'           => intval(hesk_POST('ram_slots', 0)),
+                'ram_type'            => hesk_POST('ram_type'),
+                'ram_max_storage_gb'  => intval(hesk_POST('ram_max_storage_gb', 0)),
+                'ram_max_speed_mhz'   => hesk_POST('ram_max_speed_mhz') === '' ? null : intval(hesk_POST('ram_max_speed_mhz')),
+                'chipset'             => hesk_input(hesk_POST('chipset')),
+                'network_iface'       => $csv('network_iface'),
+                'usb_ports'           => hesk_POST('usb_ports') === '' ? null : intval(hesk_POST('usb_ports')),
+                'video_ports'         => $csv('video_ports'),
+                'storage_ifaces'      => $csv('storage_ifaces'),
+            ];
+            $required = ['model', 'ram_slots', 'ram_type', 'ram_max_storage_gb'];
+            break;
+
+        case 'ps':
+            $data = [
+                'model'     => hesk_input(hesk_POST('model')),
+                'wattage_w' => intval(hesk_POST('wattage_w', 0)),
+                'is_bivolt' => isset($_POST['is_bivolt']) ? 1 : 0,
+            ];
+            $required = ['model', 'wattage_w'];
+            break;
+
+        case 'ram':
+            $data = [
+                'model'     => hesk_input(hesk_POST('model')),
+                'size_gb'   => intval(hesk_POST('size_gb', 0)),
+                'speed_mhz' => hesk_POST('speed_mhz') === '' ? null : intval(hesk_POST('speed_mhz')),
+                'ram_type'  => hesk_POST('ram_type'),
+            ];
+            $required = ['model', 'size_gb', 'ram_type'];
+            break;
+    }
+
+    // Required fields for creation
+    if (!$editing) {
+        foreach ($required as $k) {
+            if ($data[$k] === '' || $data[$k] === null) {
+                $_SESSION['iserror'] = 1;
+                hesk_process_messages($hesklang['fill_required'], 'NOREDIRECT');
+                break;
+            }
+        }
+    }
+
+    // rollback on error
+    if (isset($_SESSION['iserror'])) {
+        header('Location: manage_component.php?type=' . $type . ($orig_id ? '&id=' . $orig_id : ''));
+        exit;
+    }
+    
+    // Build SET clause
+    $cols = [];
+    foreach ($data as $col => $val) {
+        if ($val === '' || $val === null) {
+            $cols[] = "`$col` = NULL";
+        } elseif (is_numeric($val)) {
+            $cols[] = "`$col` = $val";
+        } else {
+            $cols[] = "`$col` = '" . hesk_dbEscape($val) . "'";
+        }
+    }
+    $cols = implode(",\n        ", $cols);
+    error_log("COLS: " . print_r($cols, true));
+    error_log("DATA: " . print_r($data, true));
+
+    // Execute queries
+    if ($editing) {
+        $result = hesk_dbQuery("UPDATE `{$dbp}{$type}` SET $cols WHERE `id` = $orig_id");
+        if (!$result) {
+            die('SQL Error: ' . mysqli_error($GLOBALS['hesk_db_link']));
+        }
+        $msg = sprintf($hesklang['component_updated'], '<i>' . hesk_htmlspecialchars($data['model']) . '</i>');
+    } else {
+        error_log("QUERY: INSERT INTO `{$dbp}{$type}` SET $cols");
+        $result = hesk_dbQuery("INSERT INTO `{$dbp}{$type}` SET $cols");
+        if (!$result) {
+            error_log('SQL Error: ' . mysqli_error($GLOBALS['hesk_db_link']));
+            die('SQL Error: ' . mysqli_error($GLOBALS['hesk_db_link']));
+        }
+        $msg = sprintf($hesklang['component_added'], '<i>' . hesk_htmlspecialchars($data['model']) . '</i>');
+    }
+    
+    hesk_cleanSessionVars('iserror');
+    hesk_process_messages($msg, 'manage_components.php', 'SUCCESS');
+    exit;
 }
 require_once(HESK_PATH . 'inc/footer.inc.php');
