@@ -2241,7 +2241,11 @@ $hesklang['invalid_type']='Invalid type of asset';
 $hesklang['delete_confirm']='Confirm delete';
 $hesklang['ethernet']='Ethernet';
 $hesklang['wifi']='WiFi';
-$hesklang['both']='Both';
+$hesklang['ram_has_inactive']='RAM has inactive modules';
+$hesklang['disk_has_inactive']='Disk has inactive modules';
+$hesklang['mb_is_inactive']='Motherboard is inactive';
+$hesklang['psu_is_inactive']='PSU is inactive';
+$hesklang['cpu_is_inactive']='CPU is inactive';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
