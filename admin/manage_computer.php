@@ -282,7 +282,7 @@ if (hesk_SESSION('iserror')) {
 
 <?php
 function try_save_computer() {
-    global $dbp, $hesk_settings, $hesklang;
+    global $dbp, $hesklang;
     hesk_token_check('POST');
     $orig_id = intval(hesk_POST('original_id', 0));
     $editing = ($orig_id > 0);
