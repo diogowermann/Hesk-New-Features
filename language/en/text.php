@@ -2237,6 +2237,11 @@ $hesklang['storage_ifaces']='Types of Storage Interfaces';
 $hesklang['is_bivolt']='Bivolt';
 $hesklang['wattage_w']='Wattage (W)';
 $hesklang['create']='Create';
+$hesklang['invalid_type']='Invalid type of asset';
+$hesklang['delete_confirm']='Confirm delete';
+$hesklang['ethernet']='Ethernet';
+$hesklang['wifi']='WiFi';
+$hesklang['both']='Both';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
