@@ -83,7 +83,7 @@ if (hesk_SESSION('iserror')) {
                                     <div class="actions">
                                         <a class="action-btn edit" href="manage_component.php?do=edit&type=cpu&id=<?php echo $cpu['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view" href="manage_component.php?do=view&type=cpu&id=<?php echo $cpu['id'] ?>"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
-                                        <a class="action-btn delete" href="manage_component.php?do=delete&type=cpu&id=<?php echo $cpu['id'] ?>"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
+                                        <a class="action-btn delete" href="manage_component.php?do=delete&type=cpu&id=<?php echo $cpu['id'] ?>" onclick="return confirm('<?php echo $hesklang['delete_confirm'].' '.$cpu['model'].'?' ?>')"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
                                     </div>
                                 </td>
                             </tr>
@@ -129,7 +129,7 @@ if (hesk_SESSION('iserror')) {
                                     <div class="actions">
                                         <a class="action-btn edit" href="manage_component.php?do=edit&type=ram&id=<?php echo $ram['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view" href="manage_component.php?do=view&type=ram&id=<?php echo $ram['id'] ?>"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
-                                        <a class="action-btn delete" href="manage_component.php?do=delete&type=ram&id=<?php echo $ram['id'] ?>"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
+                                        <a class="action-btn delete" href="manage_component.php?do=delete&type=ram&id=<?php echo $ram['id'] ?>" onclick="return confirm('<?php echo $hesklang['delete_confirm'].' '.$ram['model'].'?' ?>')"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
                                     </div>
                                 </td>
                             </tr>
@@ -179,7 +179,7 @@ if (hesk_SESSION('iserror')) {
                                     <div class="actions">
                                         <a class="action-btn edit" href="manage_component.php?do=edit&type=motherboard&id=<?php echo $mb['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view" href="manage_component.php?do=view&type=motherboard&id=<?php echo $mb['id'] ?>"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
-                                        <a class="action-btn delete" href="manage_component.php?do=delete&type=motherboard&id=<?php echo $mb['id'] ?>"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
+                                        <a class="action-btn delete" href="manage_component.php?do=delete&type=motherboard&id=<?php echo $mb['id'] ?>" onclick="return confirm('<?php echo $hesklang['delete_confirm'].' '.$mb['model'].'?' ?>')"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
                                     </div>
                                 </td>
                             </tr>
@@ -227,7 +227,7 @@ if (hesk_SESSION('iserror')) {
                                     <div class="actions">
                                         <a class="action-btn edit" href="manage_component.php?do=edit&type=disk&id=<?php echo $disk['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view" href="manage_component.php?do=view&type=disk&id=<?php echo $disk['id'] ?>"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-open"></use></svg></a>
-                                        <a class="action-btn delete" href="manage_component.php?do=delete&type=disk&id=<?php echo $disk['id'] ?>"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
+                                        <a class="action-btn delete" href="manage_component.php?do=delete&type=disk&id=<?php echo $disk['id'] ?>" onclick="return confirm('<?php echo $hesklang['delete_confirm'].' '.$disk['model'].'?' ?>')"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
                                     </div>
                                 </td>
                             </tr>
