@@ -35,39 +35,46 @@ hesk_checkPermission('can_man_assets');
 $dbp = hesk_dbEscape($hesk_settings['db_pfix']);
 
 $sql = "SELECT
-  c.id,
-  c.asset_tag,
-  c.mac_address,
-  c.name,
-  c.os_name,
-  c.os_version,
-  c.purchase_date,
-  c.warranty_until,
-  c.is_internal,
-  c.is_desktop,
-  c.is_secure,
-  c.is_active,
-  cpu.model       AS cpu_model,
-  mb.model        AS mb_model,
-  ps.model        AS ps_model,
-  ps.wattage_w    AS ps_watts,
-  u.name          AS user_name,
-  s.name          AS department_name,
-  GROUP_CONCAT(DISTINCT CONCAT(r.model, ' ', r.size_gb, 'GB', ' (', r.speed_mhz, 'MHz)') SEPARATOR ', ') AS ram_list,
-  GROUP_CONCAT(DISTINCT CONCAT(d.model, ' ', d.capacity_gb, 'GB', ' [', d.disk_type, ']') SEPARATOR ', ')  AS disk_list
-FROM hesk_computers AS c
-JOIN hesk_computers_cpu AS cpu ON cpu.id = c.cpu_id
-JOIN hesk_computers_mb  AS mb  ON mb.id  = c.mb_id
-LEFT JOIN hesk_computers_ps AS ps ON ps.id = c.ps_id
-LEFT JOIN hesk_computer_has_ram  AS chr ON chr.computer_id = c.id  -- Fixed table name
-LEFT JOIN hesk_computers_ram AS r   ON r.id = chr.ram_id
-LEFT JOIN hesk_computer_has_disk AS cd  ON cd.computer_id = c.id   -- Fixed table name
-LEFT JOIN hesk_computers_disk AS d   ON d.id = cd.disk_id
-LEFT JOIN hesk_customers     AS u   ON u.id = c.customer_id
-LEFT JOIN hesk_departments   AS s   ON s.id = u.department_id  -- Fixed join condition
-WHERE c.is_active = 1
-GROUP BY c.id
-ORDER BY c.name";
+  comp.id,
+  comp.asset_tag,
+  comp.mac_address,
+  comp.name,
+  comp.os_name,
+  comp.os_version,
+  comp.purchase_date,
+  comp.warranty_until,
+  comp.is_internal,
+  comp.is_desktop,
+  comp.is_secure,
+  comp.is_active,
+  cpu.model        AS cpu_model,
+  cpu.is_active    AS cpu_is_active,
+  mb.model         AS mb_model,
+  mb.is_active     AS mb_is_active,
+  ps.model         AS ps_model,
+  ps.wattage_w     AS ps_watts,
+  ps.is_active     AS psu_is_active,
+  ctmr.name        AS ctmr_name,
+  ctmr.is_active   AS ctmr_is_active,
+  dptmt.name       AS dptmt_name,
+  dptmt.is_active  AS dptmt_is_active,
+  GROUP_CONCAT(DISTINCT CONCAT(ram.model, ' ', ram.size_gb, 'GB', ' (', ram.speed_mhz, 'MHz)') SEPARATOR ', ') AS ram_list,
+  GROUP_CONCAT(DISTINCT CONCAT(disk.model, ' ', disk.capacity_gb, 'GB', ' [', disk.disk_type, ']') SEPARATOR ', ')  AS disk_list,
+  MAX(CASE WHEN ram.is_active = 0 THEN 1 ELSE 0 END) AS ram_has_inactive,
+  MAX(CASE WHEN disk.is_active = 0 THEN 1 ELSE 0 END) AS disk_has_inactive
+FROM hesk_computers              AS comp
+JOIN hesk_computers_cpu          AS cpu   ON cpu.id = comp.cpu_id
+JOIN hesk_computers_mb           AS mb    ON mb.id  = comp.mb_id
+LEFT JOIN hesk_computers_ps      AS ps    ON ps.id = comp.ps_id
+LEFT JOIN hesk_computer_has_ram  AS chr   ON chr.computer_id = comp.id
+LEFT JOIN hesk_computers_ram     AS ram     ON ram.id = chr.ram_id
+LEFT JOIN hesk_computer_has_disk AS cd    ON cd.computer_id = comp.id
+LEFT JOIN hesk_computers_disk    AS disk     ON disk.id = cd.disk_id
+LEFT JOIN hesk_customers         AS ctmr  ON ctmr.id = comp.customer_id
+LEFT JOIN hesk_departments       AS dptmt ON dptmt.id = comp.department_id
+WHERE comp.is_active = 1
+GROUP BY comp.id
+ORDER BY comp.name";
 $computers = hesk_dbQuery($sql);
 /* Required database info collected */
 
@@ -106,10 +113,38 @@ if (hesk_SESSION('iserror')) {
         <?php
         if (hesk_dbNumRows($computers) > 0) {
             while ($row = hesk_dbFetchAssoc($computers)) {
+                // check for inactive components
+                $alerts = [];
+                if ($row['cpu_is_active'] == 0) {
+                    $alerts[] = $hesklang['cpu_is_inactive'];
+                }
+                if ($row['mb_is_active'] == 0) {
+                    $alerts[] = $hesklang['mb_is_inactive'];
+                }
+                if ($row['psu_is_active'] == 0) {
+                    $alerts[] = $hesklang['psu_is_inactive'];
+                }
+                if ($row['ram_has_inactive'] == 1) {
+                    $alerts[] = $hesklang['ram_has_inactive'];
+                }
+                if ($row['disk_has_inactive'] == 1) {
+                    $alerts[] = $hesklang['disk_has_inactive'];
+                }
+                
+                $hasAlerts = !empty($alerts);
         ?>
         <div class="table-wrap">
             <div class="card computer-card">
                 <div class="mac"><?php echo strtoupper(htmlspecialchars($row['mac_address'])); ?></div>
+                <div class="alert">
+                    <?php if ($hasAlerts): ?>
+                        <div class="alert-icon">⚠️</div>
+                        <div class="alert-tooltip">
+                            <?= implode('<br>', array_map('htmlspecialchars', $alerts)) ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
                 <div class="name"><?php echo htmlspecialchars($row['name']); ?></div>
                 <div class="os"><strong>OS:</strong> <?php echo htmlspecialchars($row['os_name'] . ' ' . $row['os_version']); ?></div>
 
