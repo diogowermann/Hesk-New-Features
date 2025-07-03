@@ -29,9 +29,10 @@ hesk_checkPermission('can_man_assets');
 // table prefix
 $dbp = hesk_dbEscape($hesk_settings['db_pfix']);
 
-// Get ID from URL to know if we're editing
-$comp_id  = intval(hesk_GET('id', 0));
-$editing  = $comp_id > 0;
+// Are we editing or deleting?
+$do  = hesk_GET('do', '');
+$editing = ($do === 'edit');
+$deleting = ($do === 'delete'); 
 
 // Prepare default values
 $computer = [
@@ -55,6 +56,7 @@ $computer = [
 ];
 
 // If editing, load existing computer + its RAM/Disk links
+$comp_id  = intval(hesk_GET('id', 0));
 if ($editing) {
     $res = hesk_dbQuery("
         SELECT * 
@@ -90,6 +92,15 @@ if ($editing) {
     while ($d = hesk_dbFetchAssoc($disk_res)) {
         $computer['disk_ids'][] = $d['disk_id'];
     }
+} elseif ($deleting && ($comp_id > 0)) {
+    $res = hesk_dbQuery("
+        UPDATE `{$dbp}computers` 
+        SET `is_active` = 0 
+        WHERE `id` = {$comp_id} 
+        LIMIT 1
+    ");
+    hesk_process_messages($hesklang['asset_deleted'], 'manage_computers.php', 'SUCCESS');
+    exit;
 }
 
 // Fetch dropdown data

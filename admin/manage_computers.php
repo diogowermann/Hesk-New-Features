@@ -130,8 +130,8 @@ if (hesk_SESSION('iserror')) {
                 <?php endif; ?>
 
                 <div class="card__actions">
-                    <a href="manage_computer.php?id=<?php echo $row['id']; ?>" class="btn btn--blue-border btn--primary"><?php echo $hesklang['edit']; ?></a>
-                    <a href="delete_component.php?mac=<?php echo urlencode($row['mac_address']); ?>&amp;type=computer&amp;token=<?php hesk_token_echo(0); ?>" class="btn btn--delete" onclick="return confirm('<?php echo $hesklang['delete_confirm']; ?>')"><?php echo $hesklang['delete']; ?></a>
+                    <a href="manage_computer.php?do=edit&id=<?php echo $row['id']; ?>" class="btn btn--blue-border btn--primary"><?php echo $hesklang['edit']; ?></a>
+                    <a href="manage_computer.php?do=delete&id=<?php echo $row['id']; ?>" class="btn btn--delete" onclick="return confirm('<?php echo $hesklang['delete_confirm'].' '.$row['name'].'?' ?>')"><?php echo $hesklang['delete']; ?></a>
                 </div>
             </div>
         </div>
