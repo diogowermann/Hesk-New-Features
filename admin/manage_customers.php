@@ -33,7 +33,13 @@ hesk_checkPermission('can_man_assets');
 // prefix for queries
 $dbp = hesk_dbEscape($hesk_settings['db_pfix']);
 
-$customers = hesk_dbQuery("SELECT * FROM `{$dbp}customers` WHERE `is_active` = 1 ORDER BY name");
+$customers = hesk_dbQuery("
+    SELECT c.*, d.name AS department_name 
+    FROM `{$dbp}customers` c 
+    LEFT JOIN `{$dbp}departments` d ON c.department_id = d.id 
+    WHERE c.is_active = 1 
+    ORDER BY c.name
+");
 /* Required database info collected */
 
 /* Print header */
@@ -73,9 +79,12 @@ if (hesk_SESSION('iserror')) {
                         <tr>
                             <td><?php echo htmlspecialchars($customer['id']); ?></td>
                             <td><?php echo htmlspecialchars($customer['name']); ?></td>
+                            <td><?php echo htmlspecialchars($customer['email']); ?></td>
+                            <td><?php echo strtoupper(htmlspecialchars($customer['computer_mac'])); ?></td>
+                            <td><?php echo htmlspecialchars($customer['department_name'] ?? $hesklang['none']); ?></td>
                             <td>
                                 <div class="actions">
-                                    <a class="action-btn edit" href="manage_customer.php?do=edit&type=cpu&id=<?php echo $cpu['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                    <a class="action-btn edit" href="manage_customer.php?do=edit&id=<?php echo $customer['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                     <a class="action-btn delete"
                                        href="manage_departments.php?deactivate=<?php echo (int)$customer['id']; ?>"
                                        onclick="return confirm('<?php echo ($hesklang['delete_confirm']). ' ' . addslashes($customer['name']) . '?'; ?>')">
