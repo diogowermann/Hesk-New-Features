@@ -13930,7 +13930,7 @@ strong {
 .computer-card .alert:hover .alert-tooltip {
     display: block;
 }
-.computer-card .name {
+.computer-card .name, .computer-card .os {
     grid-area: name;
     font-size: 1.1rem;
     color: #555;
