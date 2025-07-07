@@ -130,7 +130,6 @@ if (hesk_SESSION('iserror')) {
                 if ($row['disk_has_inactive'] == 1) {
                     $alerts[] = $hesklang['disk_has_inactive'];
                 }
-                // Add alerts for inactive customer and department
                 if ($row['ctmr_name'] && isset($row['ctmr_is_active']) && $row['ctmr_is_active'] == 0) {
                     $alerts[] = $hesklang['customer_is_inactive'];
                 }
@@ -145,7 +144,7 @@ if (hesk_SESSION('iserror')) {
                 <div class="mac"><?php echo strtoupper(htmlspecialchars($row['mac_address'])); ?></div>
                 <div class="alert">
                     <?php if ($hasAlerts): ?>
-                        <div class="alert-icon">⚠️</div>
+                        <div class="icon alert-icon">⚠️</div>
                         <div class="alert-tooltip">
                             <?= implode('<br>', array_map('htmlspecialchars', $alerts)) ?>
                         </div>

@@ -13906,7 +13906,7 @@ strong {
     justify-content: flex-end;
 }
 .alert .alert-icon {
-    cursor: help;
+    cursor: pointer;
     font-size: 1.5rem;
     line-height: 1;
     padding: 0.1rem;
