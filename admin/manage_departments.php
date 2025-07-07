@@ -47,7 +47,6 @@ if (isset($_GET['deactivate']) && is_numeric($_GET['deactivate'])) {
     $dept_id = intval($_GET['deactivate']);
     hesk_dbQuery("UPDATE `{$dbp}departments` SET is_active = 0 WHERE id = {$dept_id}");
     header('Location: manage_departments.php');
-    exit;
 }
 
 $departments = hesk_dbQuery("SELECT * FROM `{$dbp}departments` WHERE `is_active` = 1 ORDER BY name");
