@@ -139,7 +139,7 @@ if (hesk_SESSION('iserror')) {
             <!-- Row 1: Asset Tag / Name -->
             <div class="grid-2">
             <div class="form-group">
-                <label for="asset_tag">Asset Tag:</label>
+                <label for="asset_tag"><?php echo $hesklang['asset_tag']; ?>:</label>
                 <input type="text" id="asset_tag" name="asset_tag" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['asset_tag']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
                 <?php if ($editing): ?>
                     <input type="hidden" name="asset_tag" value="<?php echo $computer['asset_tag']; ?>">
@@ -161,11 +161,11 @@ if (hesk_SESSION('iserror')) {
                 <?php endif; ?>
             </div>
             <div class="form-group">
-                <label for="os_name">OS Name:</label>
+                <label for="os_name"><?php echo $hesklang['os_name']; ?>:</label>
                 <input type="text" id="os_name" name="os_name" class="form-control" maxlength="100" value="<?php echo hesk_htmlspecialchars($computer['os_name']); ?>">
             </div>
             <div class="form-group">
-                <label for="os_version">OS Version:</label>
+                <label for="os_version"><?php echo $hesklang['os_version']; ?>:</label>
                 <input type="text" id="os_version" name="os_version" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['os_version']); ?>">
             </div>
             </div>

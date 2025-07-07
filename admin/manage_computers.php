@@ -130,6 +130,12 @@ if (hesk_SESSION('iserror')) {
                 if ($row['disk_has_inactive'] == 1) {
                     $alerts[] = $hesklang['disk_has_inactive'];
                 }
+                if ($row['ctmr_name'] && isset($row['ctmr_is_active']) && $row['ctmr_is_active'] == 0) {
+                    $alerts[] = $hesklang['customer_is_inactive'];
+                }
+                if ($row['dptmt_name'] && isset($row['dptmt_is_active']) && $row['dptmt_is_active'] == 0) {
+                    $alerts[] = $hesklang['department_is_inactive'];
+                }
                 
                 $hasAlerts = !empty($alerts);
         ?>
@@ -138,27 +144,27 @@ if (hesk_SESSION('iserror')) {
                 <div class="mac"><?php echo strtoupper(htmlspecialchars($row['mac_address'])); ?></div>
                 <div class="alert">
                     <?php if ($hasAlerts): ?>
-                        <div class="alert-icon">⚠️</div>
+                        <div class="icon alert-icon">⚠️</div>
                         <div class="alert-tooltip">
                             <?= implode('<br>', array_map('htmlspecialchars', $alerts)) ?>
                         </div>
                     <?php endif; ?>
                 </div>
 
-                <div class="name"><?php echo htmlspecialchars($row['name']); ?></div>
-                <div class="os"><strong>OS:</strong> <?php echo htmlspecialchars($row['os_name'] . ' ' . $row['os_version']); ?></div>
+                <div class="name"><strong><?php echo htmlspecialchars($row['name']); ?></strong></div>
+                <div class="os"><?php echo htmlspecialchars($row['os_name'] . ' ' . $row['os_version']); ?></div>
 
-                <div class="cpu"><strong>CPU:</strong> <?php echo htmlspecialchars($row['cpu_model']); ?></div>
-                <div class="mb"><strong>Motherboard:</strong> <?php echo htmlspecialchars($row['mb_model']); ?></div>
-                <div class="psu"><strong>PSU:</strong> <?php echo htmlspecialchars($row['ps_model'] . ' ' . $row['ps_watts'] . 'W'); ?></div>
-                <div class="ram"><strong>RAM:</strong> <?php echo htmlspecialchars($row['ram_list'] ?: $hesklang['empty']); ?></div>
-                <div class="disk"><strong>Disk:</strong> <?php echo htmlspecialchars($row['disk_list'] ?: $hesklang['empty']); ?></div>
+                <div class="cpu"><strong><?php echo $hesklang['cpu']; ?>:</strong> <?php echo htmlspecialchars($row['cpu_model']); ?></div>
+                <div class="mb"><strong><?php echo $hesklang['motherboard']; ?>:</strong> <?php echo htmlspecialchars($row['mb_model']); ?></div>
+                <div class="psu"><strong><?php echo $hesklang['psu']; ?>:</strong> <?php echo htmlspecialchars($row['ps_model'] . ' ' . $row['ps_watts'] . 'W'); ?></div>
+                <div class="ram"><strong><?php echo $hesklang['rams']; ?>:</strong> <?php echo htmlspecialchars($row['ram_list'] ?: $hesklang['empty']); ?></div>
+                <div class="disk"><strong><?php echo $hesklang['disks']; ?>:</strong> <?php echo htmlspecialchars($row['disk_list'] ?: $hesklang['empty']); ?></div>
 
                 <div class="purchase"><strong><?php echo $hesklang['purchase_date']; ?>:</strong> <?php echo htmlspecialchars($row['purchase_date']); ?></div>
                 <div class="warranty"><strong><?php echo $hesklang['warranty_until']; ?>:</strong> <?php echo htmlspecialchars($row['warranty_until']); ?></div>
-                <div class="customer"><strong><?php echo $hesklang['customer']; ?>:</strong> <?php echo htmlspecialchars($row['user_name'] ?: $hesklang['empty']); ?></div>
-                <div class="department"><strong><?php echo $hesklang['department']; ?>:</strong> <?php echo htmlspecialchars($row['department_name'] ?: $hesklang['empty']); ?></div>
-                <div class="security"><strong>Security:</strong> <?php echo ($row['is_secure'] ? $hesklang['on'] : $hesklang['off']); ?></div>
+                <div class="customer"><strong><?php echo $hesklang['customer']; ?>:</strong> <?php echo htmlspecialchars($row['ctmr_name'] ?: $hesklang['empty']); ?></div>
+                <div class="department"><strong><?php echo $hesklang['department']; ?>:</strong> <?php echo htmlspecialchars($row['dptmt_name'] ?: $hesklang['empty']); ?></div>
+                <div class="security"><strong><?php echo $hesklang['security']; ?>:</strong> <?php echo ($row['is_secure'] ? $hesklang['on'] : $hesklang['off']); ?></div>
 
                 <?php if ($row['asset_tag']): ?>
                     <div class="asset-tag"><?php echo htmlspecialchars($row['asset_tag']); ?></div>

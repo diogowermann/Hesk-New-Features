@@ -2246,6 +2246,19 @@ $hesklang['disk_has_inactive']='Disk has inactive modules';
 $hesklang['mb_is_inactive']='Motherboard is inactive';
 $hesklang['psu_is_inactive']='PSU is inactive';
 $hesklang['cpu_is_inactive']='CPU is inactive';
+$hesklang['department_is_inactive']='Department is inactive';
+$hesklang['customer_is_inactive']='Customer is inactive';
+$hesklang['add_new_department']='Add new department';
+$hesklang['computer']='Computer';
+$hesklang['add_new_customer']='Add new customer';
+$hesklang['customer_added']='Customer added!';
+$hesklang['customer_updated']='Customer updated!';
+$hesklang['security']='Security';
+$hesklang['os_version']='OS Version';
+$hesklang['os_name']='OS Name';
+$hesklang['os']='OS';
+$hesklang['asset_tag']='Asset TAG';
+$hesklang['security']='Security';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
