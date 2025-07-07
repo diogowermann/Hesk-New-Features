@@ -124,7 +124,7 @@ if (hesk_SESSION('iserror')) {
                     <select name="department_id" id="department_id" class="form-control">
                         <option value="0"><?php echo $hesklang['none']; ?></option>
                         <?php while ($s = hesk_dbFetchAssoc($departments)): ?>
-                            <option value="<?php echo $s['id']; ?>" <?php if ($s['id'] == $computer['department_id'])
+                            <option value="<?php echo $s['id']; ?>" <?php if ($s['id'] == $customer['department_id'])
                                    echo 'selected'; ?>>
                                 <?php echo hesk_htmlspecialchars($s['name']); ?>
                             </option>
