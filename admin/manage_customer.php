@@ -201,16 +201,26 @@ function try_save_customer()
     if ($orig_id) {
         // Update
         hesk_dbQuery("UPDATE `{$dbp}customers` SET {$cols} WHERE `id` = {$orig_id}");
+        // Update Computer customer_id field
+        if ($data['computer_mac']) {
+            // Set customer_id for the selected computer
+            hesk_dbQuery("UPDATE `{$dbp}computers` SET customer_id = {$orig_id} WHERE mac_address = '" . hesk_dbEscape($data['computer_mac']) . "'");
+        }
         $msg = sprintf($hesklang['customer_updated'], '<i>' . hesk_htmlspecialchars($data['name']) . '</i>');
     } else {
         // Insert
         hesk_dbQuery("INSERT INTO `{$dbp}customers` SET {$cols}");
+        // Update Computer customer_id field
+        if ($data['computer_mac']) {
+            // Set customer_id for the selected computer
+            $customer_id = hesk_dbInsertID();
+            hesk_dbQuery("UPDATE `{$dbp}computers` SET customer_id = {$customer_id} WHERE mac_address = '" . hesk_dbEscape($data['computer_mac']) . "'");
+        }
         $msg = sprintf($hesklang['customer_added'], '<i>' . hesk_htmlspecialchars($data['name']) . '</i>');
     }
 
     hesk_cleanSessionVars('iserror');
     hesk_process_messages($msg, 'manage_customers.php', 'SUCCESS');
-    exit;
 }
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
