@@ -13,8 +13,11 @@
  */
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
+
+/* Code for the system to be able to differ if it's content from the original HESK */
 define('IS_ASSET', 1);
 
+/* Get all the required files and functions */
 require(HESK_PATH . 'hesk_settings.inc.php');
 require(HESK_PATH . 'inc/common.inc.php');
 require(HESK_PATH . 'inc/admin_functions.inc.php');
@@ -26,19 +29,25 @@ hesk_dbConnect();
 hesk_isLoggedIn();
 hesk_checkPermission('can_man_assets');
 
+/* Get required database information for this feature */
 // prefix for queries
 $dbp = hesk_dbEscape($hesk_settings['db_pfix']);
 
 $departments = hesk_dbQuery("SELECT id, name, is_active FROM `{$dbp}departments` ORDER BY name");
+/* Required database info collected */
 
+/* Print header */
 require_once(HESK_PATH . 'inc/header.inc.php');
+
+/* Print main manage users page */
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
+/* This will handle error, success and notice messages */
 if (hesk_SESSION('iserror')) {
     hesk_handle_messages();
 }
 
-// Handle department creation (simple example, adjust as needed)
+// Handle department creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_department_name'])) {
     $new_name = hesk_dbEscape(trim($_POST['new_department_name']));
     if ($new_name !== '') {
@@ -76,8 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_department_name']
                             </td>
                             <td>
                                 <div class="actions">
-                                    <a class="action-btn edit" href="manage_department.php?do=edit&id=<?php echo $dept['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
-                                    <a class="action-btn delete" href="manage_department.php?do=delete&id=<?php echo $dept['id'] ?>" onclick="return confirm('<?php echo ($hesklang['delete_confirm'] ?? 'Delete'). ' ' . addslashes($dept['name']) . '?'; ?>')"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>
+                                    <a class="action-btn delete" href="manage_department.php?do=delete&id=<?php echo $dept['id'] ?>" onclick="return confirm('<?php echo ($hesklang['delete_confirm']). ' ' . addslashes($dept['name']) . '?'; ?>')"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>
                                 </div>
                             </td>
                         </tr>
@@ -105,8 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_department_name']
                     <input type="text" class="form-control" id="new_department_name" name="new_department_name" required maxlength="100" autofocus>
                 </div>
                 <div class="modal__buttons">
-                    <button type="submit" class="btn btn--blue-border btn--primary"><?php echo $hesklang['save'] ?? 'Save'; ?></button>
-                    <button type="button" class="btn btn--delete" onclick="toggleModal()"><?php echo $hesklang['cancel'] ?? 'Cancel'; ?></button>
+                    <button type="submit" class="btn btn--blue-border btn--primary"><?php echo $hesklang['save']; ?></button>
+                    <button type="button" class="btn btn--delete" onclick="toggleModal()"><?php echo $hesklang['cancel']; ?></button>
                 </div>
             </form>
         </div>
