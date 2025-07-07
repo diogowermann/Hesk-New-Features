@@ -37,11 +37,21 @@ require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 if (hesk_SESSION('iserror')) {
     hesk_handle_messages();
 }
+
+// Handle department creation (simple example, adjust as needed)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_department_name'])) {
+    $new_name = hesk_dbEscape(trim($_POST['new_department_name']));
+    if ($new_name !== '') {
+        hesk_dbQuery("INSERT INTO `{$dbp}departments` (name, is_active) VALUES ('{$new_name}', 1)");
+        header('Location: manage_departments.php');
+        exit;
+    }
+}
 ?>
 <div class="main__content assets">
     <section class="assets__head">
         <h2><?php echo $hesklang['departments'] ?? 'Departments'; ?></h2>
-        <a class="btn btn--blue-border" href="manage_department.php"><?php echo $hesklang['add_new_department']; ?></a>
+        <button class="btn btn--blue-border" onclick="toggleModal()"><?php echo $hesklang['add_new_department'] ?? 'Add New Department'; ?></button>
     </section>
 
     <div class="table-wrap">
@@ -51,8 +61,7 @@ if (hesk_SESSION('iserror')) {
                     <tr>
                         <th><?php echo $hesklang['id']; ?></th>
                         <th><?php echo $hesklang['name']; ?></th>
-                        <th><?php echo $hesklang['computers']; ?></th>
-                        <th><?php echo $hesklang['printers']; ?></th>
+                        <th><?php echo $hesklang['status'] ?? 'Status'; ?></th>
                         <th><?php echo $hesklang['actions']; ?></th>
                     </tr>
                 </thead>
@@ -75,14 +84,46 @@ if (hesk_SESSION('iserror')) {
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5" class="no-data"><?php echo $hesklang['no_data_found'] ?? 'No data found.'; ?></td>
+                            <td colspan="4" class="no-data"><?php echo $hesklang['no_data_found'] ?? 'No data found.'; ?></td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- Modal for adding department -->
+    <div class="modal" id="addDeptModal" onclick="modalBgClick(event)">
+        <div class="modal__body">
+            <span class="modal__close" onclick="toggleModal()">
+                <svg class="icon icon-close"><use xlink:href="../img/sprite.svg#icon-close"></use></svg>
+            </span>
+            <h3><?php echo $hesklang['add_new_department']; ?></h3>
+            <form method="post" autocomplete="off" class="form">
+                <div class="form-group">
+                    <label for="new_department_name"><?php echo $hesklang['name'] ?? 'Name'; ?></label>
+                    <input type="text" class="form-control" id="new_department_name" name="new_department_name" required maxlength="100" autofocus>
+                </div>
+                <div class="modal__buttons">
+                    <button type="submit" class="btn btn--blue-border btn--primary"><?php echo $hesklang['save'] ?? 'Save'; ?></button>
+                    <button type="button" class="btn btn--delete" onclick="toggleModal()"><?php echo $hesklang['cancel'] ?? 'Cancel'; ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<script>
+function toggleModal() {
+    var modal = document.getElementById('addDeptModal');
+    modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
+}
+function modalBgClick(e) {
+    if (e.target.classList.contains('modal')) {
+        toggleModal();
+    }
+}
+</script>
 <?php
 require_once(HESK_PATH . 'inc/footer.inc.php');
 ?>
