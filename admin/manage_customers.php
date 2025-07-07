@@ -86,7 +86,7 @@ if (hesk_SESSION('iserror')) {
                                 <div class="actions">
                                     <a class="action-btn edit" href="manage_customer.php?do=edit&id=<?php echo $customer['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                     <a class="action-btn delete"
-                                       href="manage_departments.php?deactivate=<?php echo (int)$customer['id']; ?>"
+                                       href="manage_customer.php?do=delete&id=<?php echo $customer['id']; ?>"
                                        onclick="return confirm('<?php echo ($hesklang['delete_confirm']). ' ' . addslashes($customer['name']) . '?'; ?>')">
                                         <svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg>
                                     </a>
