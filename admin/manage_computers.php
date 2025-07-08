@@ -216,10 +216,17 @@ if (hesk_SESSION('iserror')) {
                 <div class="table-wrap">
                     <div class="card computer-card">
                         <div class="mac"><?php echo strtoupper(htmlspecialchars($row['mac_address'])); ?></div>
+                        <div class="view">
+                            <a class="action-btn view" href="manage_computer.php?do=view&id=<?php echo $row['id']; ?>" title="<?php echo $hesklang['view_details']; ?>">
+                                <svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-close"></use></svg>
+                            </a>
+                        </div>
                         <div class="alert">
                             <?php if ($hasAlerts): ?>
-                                <a class="icon alert-icon" href="manage_computers.php?remove_inactive=<?php echo $row['id']; ?>"
-                                    onclick="return confirm('<?php echo $hesklang['confirm_remove_inactive']; ?>')">⚠️</a>
+                                <a class="action-btn warning" href="manage_computers.php?remove_inactive=<?php echo $row['id']; ?>"
+                                    onclick="return confirm('<?php echo $hesklang['confirm_remove_inactive']; ?>')">
+                                <svg class="icon icon-warning"><use xlink:href="../img/sprite.svg#icon-warning"></use></svg>
+                                </a>
                                 <div class="alert-tooltip">
                                     <?= implode('<br>', array_map('htmlspecialchars', $alerts)) ?>
                                 </div>
