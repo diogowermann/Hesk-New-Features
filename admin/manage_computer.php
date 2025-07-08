@@ -32,6 +32,7 @@ $dbp = hesk_dbEscape($hesk_settings['db_pfix']);
 // Are we editing or deleting?
 $do  = hesk_GET('do', '');
 $editing = ($do === 'edit');
+$viewing = ($do === 'view'); 
 $deleting = ($do === 'delete'); 
 
 // Prepare default values
@@ -53,11 +54,13 @@ $computer = [
     'is_secure'      => 1,
     'ram_ids'        => [],
     'disk_ids'       => [],
+    'created_at'     => '',
+    'updated_at'     => '',
 ];
 
 // If editing, load existing computer + its RAM/Disk links
 $comp_id  = intval(hesk_GET('id', 0));
-if ($editing) {
+if ($editing || $viewing) {
     $res = hesk_dbQuery("
         SELECT * 
         FROM `{$dbp}computers` 
@@ -140,14 +143,14 @@ if (hesk_SESSION('iserror')) {
             <div class="grid-2">
             <div class="form-group">
                 <label for="asset_tag"><?php echo $hesklang['asset_tag']; ?>:</label>
-                <input type="text" id="asset_tag" name="asset_tag" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['asset_tag']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
-                <?php if ($editing): ?>
+                <input type="text" id="asset_tag" name="asset_tag" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['asset_tag']); ?>" <?php echo ($editing || $viewing) ? 'disabled' : ''; ?>>
+                <?php if ($editing || $viewing): ?>
                     <input type="hidden" name="asset_tag" value="<?php echo $computer['asset_tag']; ?>">
                 <?php endif; ?>
             </div>
             <div class="form-group">
                 <label for="name"><?php echo $hesklang['computer_name']; ?>:<span class="important">*</span></label>
-                <input type="text" id="name" name="name" class="form-control" maxlength="100" value="<?php echo hesk_htmlspecialchars($computer['name']); ?>">
+                <input type="text" id="name" name="name" class="form-control" maxlength="100" value="<?php echo hesk_htmlspecialchars($computer['name']); ?>" <?php echo $viewing ? 'disabled' : ''; ?>>
             </div>
             </div>
 
@@ -155,18 +158,18 @@ if (hesk_SESSION('iserror')) {
             <div class="grid-3">
             <div class="form-group">
                 <label for="mac"><?php echo $hesklang['mac_address']; ?>:<span class="important">*</span></label>
-                <input type="text" id="mac" name="mac" class="form-control" maxlength="17" placeholder="00:1B:44:11:3A:B7" value="<?php echo hesk_htmlspecialchars($computer['mac_address']); ?>" <?php echo $editing ? 'disabled' : ''; ?>>
-                <?php if ($editing): ?>
+                <input type="text" id="mac" name="mac" class="form-control" maxlength="17" placeholder="00:1B:44:11:3A:B7" value="<?php echo hesk_htmlspecialchars($computer['mac_address']); ?>" <?php echo ($editing || $viewing) ? 'disabled' : ''; ?>>
+                <?php if ($editing || $viewing): ?>
                     <input type="hidden" name="mac" value="<?php echo hesk_htmlspecialchars($computer['mac_address']); ?>">
                 <?php endif; ?>
             </div>
             <div class="form-group">
                 <label for="os_name"><?php echo $hesklang['os_name']; ?>:</label>
-                <input type="text" id="os_name" name="os_name" class="form-control" maxlength="100" value="<?php echo hesk_htmlspecialchars($computer['os_name']); ?>">
+                <input type="text" id="os_name" name="os_name" class="form-control" maxlength="100" value="<?php echo hesk_htmlspecialchars($computer['os_name']); ?>" <?php echo $viewing ? 'disabled' : ''; ?>>
             </div>
             <div class="form-group">
                 <label for="os_version"><?php echo $hesklang['os_version']; ?>:</label>
-                <input type="text" id="os_version" name="os_version" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['os_version']); ?>">
+                <input type="text" id="os_version" name="os_version" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['os_version']); ?>" <?php echo $viewing ? 'disabled' : ''; ?>>
             </div>
             </div>
 
@@ -174,11 +177,11 @@ if (hesk_SESSION('iserror')) {
             <div class="grid-2">
             <div class="form-group">
                 <label for="purchase_date"><?php echo $hesklang['purchase_date']; ?>:</label>
-                <input type="date" id="purchase_date" name="purchase_date" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['purchase_date']); ?>" <?php echo ($editing && $computer['purchase_date']) ? 'disabled' : ''; ?>>
+                <input type="date" id="purchase_date" name="purchase_date" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['purchase_date']); ?>" <?php echo (($editing && $computer['purchase_date']) || $viewing) ? 'disabled' : ''; ?>>
             </div>
             <div class="form-group">
                 <label for="warranty_until"><?php echo $hesklang['warranty_until']; ?>:</label>
-                <input type="date" id="warranty_until" name="warranty_until" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['warranty_until']); ?>" <?php echo ($editing && $computer['warranty_until']) ? 'disabled' : ''; ?>>
+                <input type="date" id="warranty_until" name="warranty_until" class="form-control" value="<?php echo hesk_htmlspecialchars($computer['warranty_until']); ?>" <?php echo (($editing && $computer['warranty_until']) || $viewing) ? 'disabled' : ''; ?>>
             </div>
             </div>
 
@@ -186,7 +189,7 @@ if (hesk_SESSION('iserror')) {
             <div class="grid-2">
                 <div class="form-group">
                     <label for="customer_id"><?php echo $hesklang['customer']; ?>:</label>
-                    <select name="customer_id" id="customer_id" class="form-control">
+                    <select name="customer_id" id="customer_id" class="form-control" <?php echo $viewing ? 'disabled' : ''; ?>>
                         <option value="0"><?php echo $hesklang['none']; ?></option>
                         <?php while ($u = hesk_dbFetchAssoc($customers)): ?>
                         <option value="<?php echo $u['id']; ?>" <?php if ($u['id'] == $computer['customer_id']) echo 'selected'; ?>>
@@ -197,7 +200,7 @@ if (hesk_SESSION('iserror')) {
                 </div>
                 <div class="form-group">
                     <label for="department_id"><?php echo $hesklang['department']; ?>:</label>
-                    <select name="department_id" id="department_id" class="form-control">
+                    <select name="department_id" id="department_id" class="form-control" <?php echo $viewing ? 'disabled' : ''; ?>>
                         <option value="0"><?php echo $hesklang['none']; ?></option>
                         <?php while ($s = hesk_dbFetchAssoc($departments)): ?>
                         <option value="<?php echo $s['id']; ?>" <?php if ($s['id'] == $computer['department_id']) echo 'selected'; ?>>
@@ -213,7 +216,7 @@ if (hesk_SESSION('iserror')) {
                 <!-- CPU -->
                 <div class="form-group">
                     <label for="cpu_select"><?php echo $hesklang['cpu']; ?>: <span class="important">*</span></label>
-                    <select name="cpu_id" id="cpu_select" class="form-control" <?php echo $editing ? 'disabled' : ''; ?>>
+                    <select name="cpu_id" id="cpu_select" class="form-control" <?php echo ($editing || $viewing) ? 'disabled' : ''; ?>>
                         <option value="0"><?php echo $hesklang['select_cpu']; ?></option>
                         <?php while ($c = hesk_dbFetchAssoc($cpus)): ?>
                         <option value="<?php echo $c['id']; ?>" <?php if ($c['id'] == $computer['cpu_id']) echo 'selected'; ?>>
@@ -221,14 +224,14 @@ if (hesk_SESSION('iserror')) {
                         </option>
                         <?php endwhile; ?>
                     </select>
-                    <?php if ($editing): ?>
+                    <?php if ($editing || $viewing): ?>
                         <input type="hidden" name="cpu_id" value="<?php echo $computer['cpu_id']; ?>">
                     <?php endif; ?>
                 </div>
                 <!-- Motherboard -->
                 <div class="form-group">
                     <label for="mb_select"><?php echo $hesklang['motherboard']; ?>: <span class="important">*</span></label>
-                    <select name="mb_id" id="mb_select" class="form-control" <?php echo $editing ? 'disabled' : ''; ?>>
+                    <select name="mb_id" id="mb_select" class="form-control" <?php echo ($editing || $viewing) ? 'disabled' : ''; ?>>
                         <option value="0"><?php echo $hesklang['select_mb']; ?></option>
                         <?php while ($m = hesk_dbFetchAssoc($mbs)): ?>
                         <option value="<?php echo $m['id']; ?>" <?php if ($m['id'] == $computer['mb_id']) echo 'selected'; ?>>
@@ -236,14 +239,14 @@ if (hesk_SESSION('iserror')) {
                         </option>
                         <?php endwhile; ?>
                     </select>
-                    <?php if ($editing): ?>
+                    <?php if ($editing || $viewing): ?>
                         <input type="hidden" name="mb_id" value="<?php echo $computer['mb_id']; ?>">
                     <?php endif; ?>
                 </div>
                 <!-- PSU -->
                 <div class="form-group">
                     <label for="ps_select"><?php echo $hesklang['psu']; ?>:</label>
-                    <select name="ps_id" id="ps_select" class="form-control">
+                    <select name="ps_id" id="ps_select" class="form-control" <?php echo $viewing ? 'disabled' : ''; ?>>
                         <option value="0"><?php echo $hesklang['none']; ?></option>
                         <?php while ($p = hesk_dbFetchAssoc($pss)): ?>
                         <option value="<?php echo $p['id']; ?>" <?php if ($p['id'] == $computer['ps_id']) echo 'selected'; ?>>
@@ -261,7 +264,7 @@ if (hesk_SESSION('iserror')) {
             <label><?php echo $hesklang['rams']; ?>:<span class="important">*</span></label>
             <div class="checkbox-group multi-container">
                 <?php while ($r = hesk_dbFetchAssoc($rams)): ?>
-                <label><input type="checkbox" name="ram_ids[]" value="<?php echo $r['id']; ?>" <?php echo in_array($r['id'], $computer['ram_ids']) ? 'checked' : ''; ?>> <?php echo hesk_htmlspecialchars("{$r['model']} {$r['size_gb']}GB ({$r['speed_mhz']}MHz)"); ?></label>
+                <label><input type="checkbox" name="ram_ids[]" value="<?php echo $r['id']; ?>" <?php echo in_array($r['id'], $computer['ram_ids']) ? 'checked' : ''; ?> <?php echo $viewing ? 'disabled' : ''; ?>> <?php echo hesk_htmlspecialchars("{$r['model']} {$r['size_gb']}GB ({$r['speed_mhz']}MHz)"); ?></label>
                 <?php endwhile; ?>
             </div>
             </div>
@@ -271,7 +274,7 @@ if (hesk_SESSION('iserror')) {
             <label><?php echo $hesklang['disks']; ?>:</label>
             <div class="checkbox-group multi-container">
                 <?php while ($d = hesk_dbFetchAssoc($disks)): ?>
-                <label><input type="checkbox" name="disk_ids[]" value="<?php echo $d['id']; ?>" <?php echo in_array($d['id'], $computer['disk_ids']) ? 'checked' : ''; ?>> <?php echo hesk_htmlspecialchars("{$d['model']} {$d['capacity_gb']}GB [{$d['disk_type']}] "); ?></label>
+                <label><input type="checkbox" name="disk_ids[]" value="<?php echo $d['id']; ?>" <?php echo in_array($d['id'], $computer['disk_ids']) ? 'checked' : ''; ?> <?php echo $viewing ? 'disabled' : ''; ?>> <?php echo hesk_htmlspecialchars("{$d['model']} {$d['capacity_gb']}GB [{$d['disk_type']}] "); ?></label>
                 <?php endwhile; ?>
             </div>
             </div>
@@ -279,14 +282,27 @@ if (hesk_SESSION('iserror')) {
 
             <!-- flags -->
             <div class="form-group grid-4">
-                <div><label><input type="checkbox" name="is_internal" value="1" <?php echo $computer['is_internal'] ? 'checked' : ''; ?>> <?php echo $hesklang['internal']; ?></label></div>
-                <div><label><input type="checkbox" name="is_desktop" value="1" <?php echo $computer['is_desktop'] ? 'checked' : ''; ?>> <?php echo $hesklang['desktop']; ?></label></div>
-                <div><label><input type="checkbox" name="is_secure" value="1" <?php echo $computer['is_secure'] ? 'checked' : ''; ?>> <?php echo $hesklang['protected']; ?></label></div>
+                <div><label><input type="checkbox" name="is_internal" value="1" <?php echo $computer['is_internal'] ? 'checked' : ''; ?> <?php echo $viewing ? 'disabled' : ''; ?>> <?php echo $hesklang['internal']; ?></label></div>
+                <div><label><input type="checkbox" name="is_desktop" value="1" <?php echo $computer['is_desktop'] ? 'checked' : ''; ?> <?php echo $viewing ? 'disabled' : ''; ?>> <?php echo $hesklang['desktop']; ?></label></div>
+                <div><label><input type="checkbox" name="is_secure" value="1" <?php echo $computer['is_secure'] ? 'checked' : ''; ?> <?php echo $viewing ? 'disabled' : ''; ?>> <?php echo $hesklang['protected']; ?></label></div>
+                <?php if (!$viewing): ?>
                 <button type="submit" class="btn btn-full" ripple="ripple">
                 <?php echo $editing ? $hesklang['save_computer'] : $hesklang['create_computer']; ?>
                 </button>
+                <?php endif; ?>
             </div>
 
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="created_at"><?php echo $hesklang['created_at']; ?><?php $hesklang['created_at'] ?>:</label>
+                    <input type="text" name="created_at" id="created_at" class="form-control" value="<?php echo date('H:i:s - d/m/Y', strtotime($computer['created_at'])); ?>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="updated_at"><?php echo $hesklang['updated_at']; ?><?php $hesklang['updated_at'] ?>:</label>
+                    <input type="text" name="updated_at" id="updated_at" class="form-control" value="<?php echo date('H:i:s - d/m/Y', strtotime($computer['updated_at'])); ?>" disabled>
+                </div>
+            </div>
         </form>
     </div>
 </div>
