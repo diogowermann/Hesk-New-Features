@@ -2259,6 +2259,8 @@ $hesklang['os_name']='OS Name';
 $hesklang['os']='OS';
 $hesklang['asset_tag']='Asset TAG';
 $hesklang['security']='Security';
+$hesklang['inactive_removed']='Inactive removed from computer';
+$hesklang['confirm_remove_inactive']='Remove inactive components?';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
