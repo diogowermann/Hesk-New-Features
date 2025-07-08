@@ -177,7 +177,7 @@ $calling_script = basename($_SERVER['PHP_SELF'], '.php');
                 <?php } 
                 /*CUSTOM CODE BY 'diogowermann'*/ 
                 if (hesk_checkPermission('can_man_assets',0)) {
-                    $pages = array('manage_components', 'manage_computers', 'manage_monitors', 'manage_printers', 'manage_sectors', 'manage_customers');
+                    $pages = array('manage_components', 'manage_computers', 'manage_monitors', 'manage_printers', 'manage_departments', 'manage_customers');
                     $open_menu = in_array($calling_script, $pages) ? 'current submenu-is-opened' : '';
                 ?>
                 <li class="listitem submenu <?php echo $open_menu; ?>">
