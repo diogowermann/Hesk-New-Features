@@ -2261,6 +2261,9 @@ $hesklang['asset_tag']='Asset TAG';
 $hesklang['security']='Security';
 $hesklang['inactive_removed']='Inactive removed from computer';
 $hesklang['confirm_remove_inactive']='Remove inactive components?';
+$hesklang['view_details'] = 'View computer details';
+$hesklang['updated_at'] = 'Updated At';
+$hesklang['created_at'] = 'Created At';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
