@@ -33,9 +33,10 @@ hesk_checkPermission('can_man_assets');
 $dbp = hesk_dbEscape($hesk_settings['db_pfix']);
 
 $printers = hesk_dbQuery(
-    "SELECT p.*, d.name AS department_name
+    "SELECT p.*, d.name AS department_name, c.mac_address AS computer_mac, c.id AS computer_id
      FROM `{$dbp}printers` p
      LEFT JOIN `{$dbp}departments` d ON p.department_id = d.id
+     LEFT JOIN `{$dbp}computers` c ON p.computer_id = c.id
      WHERE p.is_active = 1
      ORDER BY p.model"
 );
@@ -68,7 +69,7 @@ if (hesk_SESSION('iserror')) {
                 <tr>
                     <th><?php echo $hesklang['id']; ?></th>
                     <th><?php echo $hesklang['model']; ?></th>
-                    <th><?php echo $hesklang['ip_address']; ?></th>
+                    <th><?php echo $hesklang['ip_mac']; ?></th>
                     <th><?php echo $hesklang['local']; ?></th>
                     <th><?php echo $hesklang['department']; ?></th>
                     <th class="no-sort"><?php echo $hesklang['actions']; ?></th>
@@ -80,7 +81,23 @@ if (hesk_SESSION('iserror')) {
                     <tr>
                         <td><?php echo htmlspecialchars($printer['id']); ?></td>
                         <td><?php echo htmlspecialchars($printer['model']); ?></td>
-                        <td><?php echo htmlspecialchars($printer['ip_mac']); ?></td>
+                        <td>
+                            <?php
+                            // For local printers with computer assignment
+                            if ($printer['is_local'] && $printer['computer_id'] > 0 && !empty($printer['computer_mac'])) {
+                                $mac = htmlspecialchars($printer['computer_mac']);
+                                echo strtoupper("<a href=\"manage_computer.php?id={$printer['computer_id']}&do=view\">$mac</a>");
+                            }
+                            // For network printers with IP address
+                            elseif (!$printer['is_local'] && !empty($printer['ip_address'])) {
+                                echo htmlspecialchars($printer['ip_address']);
+                            }
+                            // No valid address available
+                            else {
+                                echo $hesklang['none'];
+                            }
+                            ?>
+                        </td>
                         <td><?php echo $printer['is_local'] ? $hesklang['yes'] : $hesklang['no']; ?></td>
                         <td><?php echo htmlspecialchars($printer['department_name'] ?? $hesklang['none']); ?></td>
                         <td>
