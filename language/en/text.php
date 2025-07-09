@@ -2264,6 +2264,20 @@ $hesklang['confirm_remove_inactive']='Remove inactive components?';
 $hesklang['view_details'] = 'View computer details';
 $hesklang['updated_at'] = 'Updated At';
 $hesklang['created_at'] = 'Created At';
+$hesklang['ip_mac']='IP/MAC';
+$hesklang['local']='Local';
+$hesklang['add_new_printer']='Add new printer';
+$hesklang['printer_deleted']='Printer deleted';
+$hesklang['printer_not_found'] = 'Printer not found';
+$hesklang['printer_deleted'] = 'Printer successfully deleted';
+$hesklang['edit_printer'] = 'Edit Printer';
+$hesklang['printer_type'] = 'Printer Type';
+$hesklang['local'] = 'Local';
+$hesklang['network'] = 'Network';
+$hesklang['p_model_req'] = 'Printer model is required';
+$hesklang['invalid_ip'] = 'Invalid IP address format';
+$hesklang['printer_updated'] = 'Printer %s updated successfully';
+$hesklang['printer_added'] = 'Printer %s added successfully';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW

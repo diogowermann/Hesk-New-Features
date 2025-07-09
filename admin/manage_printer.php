@@ -247,7 +247,7 @@ function try_save_printer() {
     // Validation
     if (empty($data['model'])) {
         $_SESSION['iserror'] = 1;
-        hesk_process_messages($hesklang['p_name_req'], 'NOREDIRECT');
+        hesk_process_messages($hesklang['p_model_req'], 'NOREDIRECT');
     }
 
     // IP validation
