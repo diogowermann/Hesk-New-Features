@@ -13,7 +13,6 @@
  */
 define('IN_SCRIPT', 1);
 define('HESK_PATH', '../');
-
 /* Code for the system to be able to differ if it's content from the original HESK */
 define('IS_ASSET', 1);
 
@@ -41,6 +40,9 @@ $printers = hesk_dbQuery(
      ORDER BY p.model"
 );
 /* Required database info collected */
+
+// Switch between local and network printer
+$local;
 
 /* Print header */
 require_once(HESK_PATH . 'inc/header.inc.php');
@@ -78,7 +80,7 @@ if (hesk_SESSION('iserror')) {
                     <tr>
                         <td><?php echo htmlspecialchars($printer['id']); ?></td>
                         <td><?php echo htmlspecialchars($printer['model']); ?></td>
-                        <td><?php echo htmlspecialchars($printer['ip_address']); ?></td>
+                        <td><?php echo htmlspecialchars($printer['ip_mac']); ?></td>
                         <td><?php echo $printer['is_local'] ? $hesklang['yes'] : $hesklang['no']; ?></td>
                         <td><?php echo htmlspecialchars($printer['department_name'] ?? $hesklang['none']); ?></td>
                         <td>
