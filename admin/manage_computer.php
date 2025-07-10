@@ -293,16 +293,18 @@ if (hesk_SESSION('iserror')) {
             </div>
 
 
-            <div class="grid-2">
-                <div class="form-group">
-                    <label for="created_at"><?php echo $hesklang['created_at']; ?><?php $hesklang['created_at'] ?>:</label>
-                    <input type="text" name="created_at" id="created_at" class="form-control" value="<?php echo date('H:i:s - d/m/Y', strtotime($computer['created_at'])); ?>" disabled>
+            <?php if ($viewing): ?>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="created_at"><?php echo $hesklang['created_at']; ?><?php $hesklang['created_at'] ?>:</label>
+                        <input type="text" name="created_at" id="created_at" class="form-control" value="<?php echo date('H:i:s - d/m/Y', strtotime($computer['created_at'])); ?>" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="updated_at"><?php echo $hesklang['updated_at']; ?><?php $hesklang['updated_at'] ?>:</label>
+                        <input type="text" name="updated_at" id="updated_at" class="form-control" value="<?php echo date('H:i:s - d/m/Y', strtotime($computer['updated_at'])); ?>" disabled>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="updated_at"><?php echo $hesklang['updated_at']; ?><?php $hesklang['updated_at'] ?>:</label>
-                    <input type="text" name="updated_at" id="updated_at" class="form-control" value="<?php echo date('H:i:s - d/m/Y', strtotime($computer['updated_at'])); ?>" disabled>
-                </div>
-            </div>
+            <?php endif; ?>
         </form>
     </div>
 </div>
