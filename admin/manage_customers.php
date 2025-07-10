@@ -34,9 +34,10 @@ hesk_checkPermission('can_man_assets');
 $dbp = hesk_dbEscape($hesk_settings['db_pfix']);
 
 $customers = hesk_dbQuery("
-    SELECT c.*, d.name AS department_name 
+    SELECT c.*, d.name AS department_name, comp.id AS computer_id
     FROM `{$dbp}customers` c 
     LEFT JOIN `{$dbp}departments` d ON c.department_id = d.id 
+    LEFT JOIN `{$dbp}computers`  comp ON comp.mac_address = c.computer_mac
     WHERE c.is_active = 1 
     ORDER BY c.name
 ");
@@ -80,7 +81,7 @@ if (hesk_SESSION('iserror')) {
                             <td><?php echo htmlspecialchars($customer['id']); ?></td>
                             <td><?php echo htmlspecialchars($customer['name']); ?></td>
                             <td><?php echo htmlspecialchars($customer['email']); ?></td>
-                            <td><?php echo strtoupper(htmlspecialchars($customer['computer_mac'])); ?></td>
+                            <td><?php echo "<a href=\"manage_computer.php?id={$customer['computer_id']}&do=view\">".strtoupper($customer['computer_mac'])."</a>" ?></td>
                             <td><?php echo htmlspecialchars($customer['department_name'] ?? $hesklang['none']); ?></td>
                             <td>
                                 <div class="actions">

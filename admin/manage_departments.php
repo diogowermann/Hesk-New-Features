@@ -50,6 +50,28 @@ if (isset($_GET['deactivate']) && is_numeric($_GET['deactivate'])) {
 }
 
 $departments = hesk_dbQuery("SELECT * FROM `{$dbp}departments` WHERE `is_active` = 1 ORDER BY name");
+
+// Pre-fetch active customers and printers by department
+$customers_by_dept = array();
+$res = hesk_dbQuery("SELECT id, name, department_id FROM `{$dbp}customers` WHERE is_active=1");
+while ($row = hesk_dbFetchAssoc($res)) {
+    $dept_id = $row['department_id'];
+    if (!isset($customers_by_dept[$dept_id])) {
+        $customers_by_dept[$dept_id] = array();
+    }
+    $customers_by_dept[$dept_id][] = $row;
+}
+
+$printers_by_dept = array();
+$res = hesk_dbQuery("SELECT id, model, department_id FROM `{$dbp}printers` WHERE is_active=1");
+while ($row = hesk_dbFetchAssoc($res)) {
+    $dept_id = $row['department_id'];
+    if (!isset($printers_by_dept[$dept_id])) {
+        $printers_by_dept[$dept_id] = array();
+    }
+    $printers_by_dept[$dept_id][] = $row;
+}
+
 /* Required database info collected */
 
 /* Print header */
@@ -66,7 +88,7 @@ if (hesk_SESSION('iserror')) {
 <div class="main__content assets">
     <section class="assets__head">
         <h2><?php echo $hesklang['departments']; ?></h2>
-        <button class="btn btn--blue-border" onclick="toggleModal()"><?php echo $hesklang['add_new_department'] ?? 'Add New Department'; ?></button>
+        <button class="btn btn--blue-border" onclick="toggleModal()"><?php echo $hesklang['add_new_department']; ?></button>
     </section>
 
     <div class="table-wrap">
@@ -76,15 +98,64 @@ if (hesk_SESSION('iserror')) {
                     <tr>
                         <th><?php echo $hesklang['id']; ?></th>
                         <th><?php echo $hesklang['name']; ?></th>
+                        <th><?php echo $hesklang['customers']; ?></th>
+                        <th><?php echo $hesklang['printers']; ?></th>
                         <th><?php echo $hesklang['actions']; ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (hesk_dbNumRows($departments) > 0): ?>
-                        <?php while ($dept = hesk_dbFetchAssoc($departments)): ?>
+                        <?php while ($dept = hesk_dbFetchAssoc($departments)): 
+                            $dept_id = $dept['id'];
+                            $customer_list = isset($customers_by_dept[$dept_id]) ? $customers_by_dept[$dept_id] : array();
+                            $printer_list = isset($printers_by_dept[$dept_id]) ? $printers_by_dept[$dept_id] : array();
+                            $customer_count = count($customer_list);
+                            $printer_count = count($printer_list);
+                            
+                            // Prepare tooltip content
+                            $customer_tooltip = '';
+                            foreach ($customer_list as $customer) {
+                                $customer_tooltip .= htmlspecialchars($customer['name']) . '<br>';
+                            }
+                            
+                            $printer_tooltip = '';
+                            foreach ($printer_list as $printer) {
+                                $printer_tooltip .= htmlspecialchars($printer['model']) . '<br>';
+                            }
+                        ?>
                         <tr>
                             <td><?php echo htmlspecialchars($dept['id']); ?></td>
                             <td><?php echo htmlspecialchars($dept['name']); ?></td>
+                            <td>
+                                <?php echo $customer_count; ?>
+                                <?php if ($customer_count > 0): ?>
+                                <div class="tooltype right out-close">
+                                    <svg class="icon icon-info">
+                                        <use xlink:href="<?php echo HESK_PATH; ?>img/sprite.svg#icon-info"></use>
+                                    </svg>
+                                    <div class="tooltype__content">
+                                        <div class="tooltype__wrapper">
+                                            <?php echo $customer_tooltip; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php echo $printer_count; ?>
+                                <?php if ($printer_count > 0): ?>
+                                <div class="tooltype right out-close">
+                                    <svg class="icon icon-info">
+                                        <use xlink:href="<?php echo HESK_PATH; ?>img/sprite.svg#icon-info"></use>
+                                    </svg>
+                                    <div class="tooltype__content">
+                                        <div class="tooltype__wrapper">
+                                            <?php echo $printer_tooltip; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <div class="actions">
                                     <a class="action-btn delete"
@@ -98,7 +169,7 @@ if (hesk_SESSION('iserror')) {
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="4" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
+                            <td colspan="5" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -115,7 +186,7 @@ if (hesk_SESSION('iserror')) {
             <h3><?php echo $hesklang['add_new_department']; ?></h3>
             <form method="post" autocomplete="off" class="form">
                 <div class="form-group">
-                    <label for="new_department_name"><?php echo $hesklang['name'] ?? 'Name'; ?></label>
+                    <label for="new_department_name"><?php echo $hesklang['name']; ?></label>
                     <input type="text" class="form-control" id="new_department_name" name="new_department_name" required maxlength="100" autofocus>
                 </div>
                 <div class="modal__buttons">

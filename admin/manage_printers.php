@@ -86,7 +86,7 @@ if (hesk_SESSION('iserror')) {
                             // For local printers with computer assignment
                             if ($printer['is_local'] && $printer['computer_id'] > 0 && !empty($printer['computer_mac'])) {
                                 $mac = htmlspecialchars($printer['computer_mac']);
-                                echo strtoupper("<a href=\"manage_computer.php?id={$printer['computer_id']}&do=view\">$mac</a>");
+                                echo "<a href=\"manage_computer.php?id={$printer['computer_id']}&do=view\">".strtoupper($mac)."</a>";
                             }
                             // For network printers with IP address
                             elseif (!$printer['is_local'] && !empty($printer['ip_address'])) {

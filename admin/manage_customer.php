@@ -73,7 +73,13 @@ if ($editing) {
 }
 
 // Fetch dropdown data
-$computers = hesk_dbQuery("SELECT mac_address,name FROM `{$dbp}computers` WHERE is_active=1 AND customer_id IS NULL");
+if ($editing) {
+    $computers = hesk_dbQuery("SELECT mac_address,name 
+    FROM `{$dbp}computers` WHERE is_active=1 AND customer_id IS NULL OR customer_id = {$id}");    
+} else {
+    $computers = hesk_dbQuery("SELECT mac_address,name 
+    FROM `{$dbp}computers` WHERE is_active=1 AND customer_id IS NULL");
+}
 $departments = hesk_dbQuery("SELECT id,name FROM `{$dbp}departments` WHERE is_active=1");
 
 // Handle form submit
@@ -91,7 +97,7 @@ if (hesk_SESSION('iserror')) {
 <div class="main__content assets asset-create">
     <section class="assets__head">
         <h2>
-            <?php echo $editing ? $hesklang['edit_computer'] : $hesklang['create_computer']; ?>
+            <?php echo $editing ? $hesklang['edit_customer'] : $hesklang['create_customer']; ?>
         </h2>
     </section>
 
