@@ -177,7 +177,7 @@ $calling_script = basename($_SERVER['PHP_SELF'], '.php');
                 <?php } 
                 /*CUSTOM CODE BY 'diogowermann'*/ 
                 if (hesk_checkPermission('can_man_assets',0)) {
-                    $pages = array('manage_components', 'manage_computers', 'manage_monitors', 'manage_printers', 'manage_sectors', 'manage_customers');
+                    $pages = array('manage_components', 'manage_computers', 'manage_monitors', 'manage_printers', 'manage_departments', 'manage_customers');
                     $open_menu = in_array($calling_script, $pages) ? 'current submenu-is-opened' : '';
                 ?>
                 <li class="listitem submenu <?php echo $open_menu; ?>">
@@ -204,7 +204,7 @@ $calling_script = basename($_SERVER['PHP_SELF'], '.php');
                                 <a href="manage_printers.php"><?php echo $hesklang['printers'] ?></a>
                             </li>
                             <li class="submenu__listitem <?php if ($calling_script === 'manage_departments') { ?>current<?php } ?>">
-                                <a href="manage_sectors.php"><?php echo $hesklang['departments'] ?></a>
+                                <a href="manage_departments.php"><?php echo $hesklang['departments'] ?></a>
                             </li>
                             <li class="submenu__listitem <?php if ($calling_script === 'manage_customers') { ?>current<?php } ?>">
                                 <a href="manage_customers.php"><?php echo $hesklang['customers'] ?></a>
