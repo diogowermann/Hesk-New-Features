@@ -86,55 +86,6 @@ if (hesk_SESSION('iserror')) {
 }
 ?>
 <div class="main__content assets">
-    <style>
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-            margin-left: 5px;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: #555;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1000;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .tooltip .tooltiptext::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #555 transparent transparent transparent;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-        .tooltip-icon {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            background: #ccc;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 16px;
-            font-size: 12px;
-        }
-    </style>
-    
     <section class="assets__head">
         <h2><?php echo $hesklang['departments']; ?></h2>
         <button class="btn btn--blue-border" onclick="toggleModal()"><?php echo $hesklang['add_new_department']; ?></button>
