@@ -189,12 +189,10 @@ if (hesk_SESSION('iserror')) {
                 </div>
             <?php endif; ?>
 
-            <!-- Submit Button -->
             <?php if (!$viewing): ?>
-            <div class="form-group">
-                <button type="submit" class="btn btn-full" ripple="ripple">
-                    <?php echo $editing ? $hesklang['save'] : $hesklang['create']; ?>
-                </button>
+            <div class="grid-2">
+                <button type="submit" class="btn btn-full btn--primary"><?php echo $editing ? $hesklang['save'] : $hesklang['create']; ?></button>
+                <a class="btn btn--blue-border" href="manage_printers.php"><?php echo $hesklang['cancel'] ?></a>
             </div>
             <?php endif; 
             if (!$viewing): ?>
