@@ -174,7 +174,45 @@ $calling_script = basename($_SERVER['PHP_SELF'], '.php');
                         </a>
                     </div>
                 </li>
-                <?php } ?>
+                <?php } 
+                /*CUSTOM CODE BY 'diogowermann'*/ 
+                if (hesk_checkPermission('can_man_assets',0)) {
+                    $pages = array('manage_components', 'manage_computers', 'manage_monitors', 'manage_printers', 'manage_departments', 'manage_customers');
+                    $open_menu = in_array($calling_script, $pages) ? 'current submenu-is-opened' : '';
+                ?>
+                <li class="listitem submenu <?php echo $open_menu; ?>">
+                    <div class="listitem__icon">
+                        <a href="#">
+                            <svg class="icon icon-devices">
+                                <use xlink:href="<?php echo HESK_PATH; ?>img/sprite.svg#icon-devices"></use>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="listitem__menu">
+                        <a href="#" class="listitem__caption"><?php echo $hesklang['assets_management'] ?></a>
+                        <ul class="submenu__list">
+                            <li class="submenu__listitem <?php if ($calling_script === 'manage_components') { ?>current<?php } ?>">
+                                <a href="manage_components.php"><?php echo $hesklang['components'] ?></a>
+                            </li>
+                            <li class="submenu__listitem <?php if ($calling_script === 'manage_computers') { ?>current<?php } ?>">
+                                <a href="manage_computers.php"><?php echo $hesklang['computers'] ?></a>
+                            </li>
+                            <li class="submenu__listitem <?php if ($calling_script === 'manage_monitors') { ?>current<?php } ?>">
+                                <a href="manage_monitors.php"><?php echo $hesklang['monitors'] ?></a>
+                            </li>
+                            <li class="submenu__listitem <?php if ($calling_script === 'manage_printers') { ?>current<?php } ?>">
+                                <a href="manage_printers.php"><?php echo $hesklang['printers'] ?></a>
+                            </li>
+                            <li class="submenu__listitem <?php if ($calling_script === 'manage_departments') { ?>current<?php } ?>">
+                                <a href="manage_departments.php"><?php echo $hesklang['departments'] ?></a>
+                            </li>
+                            <li class="submenu__listitem <?php if ($calling_script === 'manage_customers') { ?>current<?php } ?>">
+                                <a href="manage_customers.php"><?php echo $hesklang['customers'] ?></a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <?php } /*END CUSTOM*/ ?>
                 <li class="separator"></li>
                 <?php if (hesk_checkPermission('can_man_users',0) || hesk_checkPermission('can_view_users',0)) { ?>
                 <li class="listitem <?php if ($calling_script === 'manage_users') { ?>current<?php } ?>">
