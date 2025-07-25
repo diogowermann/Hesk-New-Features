@@ -30,11 +30,11 @@ hesk_checkPermission('can_man_assets');
 // prefix for queries
 $dbp = hesk_dbEscape($hesk_settings['db_pfix']);
 
-$cpus  = hesk_dbQuery("SELECT id, model, cores, threads FROM `{$dbp}computers_cpu` WHERE is_active=1 ORDER BY model");
-$rams  = hesk_dbQuery("SELECT id, model, size_gb, speed_mhz, ram_type FROM `{$dbp}computers_ram` WHERE is_active=1 ORDER BY model");
-$mbs   = hesk_dbQuery("SELECT id, model, ram_slots, ram_type, ram_max_storage_gb, ram_max_speed_mhz, chipset FROM `{$dbp}computers_mb` WHERE is_active=1 ORDER BY model");
-$disks = hesk_dbQuery("SELECT id, model, disk_type, interface, speed_rpm, capacity_gb FROM `{$dbp}computers_disk` WHERE is_active=1 ORDER BY model");
-$psus  = hesk_dbQuery("SELECT id, model, wattage_w, is_bivolt FROM `{$dbp}computers_ps` WHERE is_active=1 ORDER BY model");
+$cpus  = hesk_dbQuery("SELECT * FROM `{$dbp}computers_cpu` WHERE is_active=1 ORDER BY model");
+$rams  = hesk_dbQuery("SELECT * FROM `{$dbp}computers_ram` WHERE is_active=1 ORDER BY model");
+$mbs   = hesk_dbQuery("SELECT * FROM `{$dbp}computers_mb` WHERE is_active=1 ORDER BY model");
+$disks = hesk_dbQuery("SELECT * FROM `{$dbp}computers_disk` WHERE is_active=1 ORDER BY model");
+$psus  = hesk_dbQuery("SELECT * FROM `{$dbp}computers_ps` WHERE is_active=1 ORDER BY model");
 /* Required database info collected */
 
 /* Print header */
@@ -44,7 +44,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 /* This will handle error, success and notice messages */
-if (hesk_SESSION('iserror')) {
+if (!hesk_SESSION('error')) {
     hesk_handle_messages();
 }
 ?>
@@ -64,10 +64,11 @@ if (hesk_SESSION('iserror')) {
                 <table class="table sindu-table">
                     <thead>
                         <tr>
-                            <th><?php echo $hesklang['id'] ?></th>
                             <th><?php echo $hesklang['model'] ?></th>
                             <th><?php echo $hesklang['cores'] ?></th>
                             <th><?php echo $hesklang['threads'] ?></th>
+                            <th><?php echo $hesklang['ghz'] ?></th>
+                            <th><?php echo $hesklang['gpu'] ?></th>
                             <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
@@ -75,10 +76,11 @@ if (hesk_SESSION('iserror')) {
                         <?php if (hesk_dbNumRows($cpus) > 0): ?>
                             <?php while ($cpu = hesk_dbFetchAssoc($cpus)): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($cpu['id']); ?></td>
-                                <td><?php echo htmlspecialchars($cpu['model']); ?></td>
+                                <td><?php if ($cpu['link']): ?><a href="<?php echo $cpu['link']; ?>" ><?php endif; echo htmlspecialchars($cpu['model']); if ($cpu['link']): ?></a><?php endif; ?></td>
                                 <td><?php echo htmlspecialchars($cpu['cores']); ?></td>
                                 <td><?php echo htmlspecialchars($cpu['threads']); ?></td>
+                                <td><?php echo htmlspecialchars($cpu['ghz']); ?></td>
+                                <td><?php echo htmlspecialchars($cpu['gpu']); ?></td>
                                 <td>
                                     <div class="actions">
                                         <a class="action-btn edit" href="manage_component.php?do=edit&type=cpu&id=<?php echo $cpu['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
@@ -90,7 +92,7 @@ if (hesk_SESSION('iserror')) {
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="5" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
+                                <td colspan="6" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -121,7 +123,7 @@ if (hesk_SESSION('iserror')) {
                             <?php while ($ram = hesk_dbFetchAssoc($rams)): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($ram['id']); ?></td>
-                                <td><?php echo htmlspecialchars($ram['model']); ?></td>
+                                <td><?php if ($ram['link']): ?><a href="<?php echo $ram['link']; ?>" ><?php endif; echo htmlspecialchars($ram['model']); if ($ram['link']): ?></a><?php endif; ?></td>
                                 <td><?php echo htmlspecialchars($ram['size_gb']); ?></td>
                                 <td><?php echo htmlspecialchars($ram['speed_mhz']); ?></td>
                                 <td><?php echo htmlspecialchars($ram['ram_type']); ?></td>
@@ -154,12 +156,10 @@ if (hesk_SESSION('iserror')) {
                 <table class="table sindu-table">
                     <thead>
                         <tr>
-                            <th><?php echo $hesklang['id'] ?></th>
                             <th><?php echo $hesklang['model'] ?></th>
                             <th><?php echo $hesklang['ram_slots'] ?></th>
                             <th><?php echo $hesklang['type'] ?></th>
                             <th><?php echo $hesklang['max_ram_gb'] ?></th>
-                            <th><?php echo $hesklang['speed_mhz'] ?></th>
                             <th><?php echo $hesklang['chipset'] ?></th>
                             <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
@@ -168,12 +168,10 @@ if (hesk_SESSION('iserror')) {
                         <?php if (hesk_dbNumRows($mbs) > 0): ?>
                             <?php while ($mb = hesk_dbFetchAssoc($mbs)): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($mb['id']); ?></td>
-                                <td><?php echo htmlspecialchars($mb['model']); ?></td>
+                                <td><?php if ($mb['link']): ?><a href="<?php echo $mb['link']; ?>" ><?php endif; echo htmlspecialchars($mb['model']); if ($mb['link']): ?></a><?php endif; ?></td>
                                 <td><?php echo htmlspecialchars($mb['ram_slots']); ?></td>
-                                <td><?php echo htmlspecialchars($mb['ram_type']); ?></td>
-                                <td><?php echo htmlspecialchars($mb['ram_max_storage_gb']); ?></td>
-                                <td><?php echo htmlspecialchars($mb['ram_max_speed_mhz']); ?></td>
+                                <td><?php echo htmlspecialchars($mb['ddr']); ?></td>
+                                <td><?php echo htmlspecialchars($mb['max_ram_gb']); ?></td>
                                 <td><?php echo htmlspecialchars($mb['chipset']); ?></td>
                                 <td>
                                     <div class="actions">
@@ -204,12 +202,10 @@ if (hesk_SESSION('iserror')) {
                 <table class="table sindu-table">
                     <thead>
                         <tr>
-                            <th><?php echo $hesklang['id'] ?></th>
                             <th><?php echo $hesklang['model'] ?></th>
                             <th><?php echo $hesklang['type'] ?></th>
                             <th><?php echo $hesklang['interface'] ?></th>
-                            <th><?php echo $hesklang['speed_rpm'] ?></th>
-                            <th><?php echo $hesklang['capacity_gb'] ?></th>
+                            <th><?php echo $hesklang['size_gb'] ?></th>
                             <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
@@ -217,12 +213,10 @@ if (hesk_SESSION('iserror')) {
                         <?php if (hesk_dbNumRows($disks) > 0): ?>
                             <?php while ($disk = hesk_dbFetchAssoc($disks)): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($disk['id']); ?></td>
-                                <td><?php echo htmlspecialchars($disk['model']); ?></td>
-                                <td><?php echo htmlspecialchars($disk['disk_type']); ?></td>
+                                <td><?php if ($disk['link']): ?><a href="<?php echo $disk['link']; ?>" ><?php endif; echo htmlspecialchars($disk['model']); if ($disk['link']): ?></a><?php endif; ?></td>
+                                <td><?php echo htmlspecialchars($disk['type']); ?></td>
                                 <td><?php echo htmlspecialchars($disk['interface']); ?></td>
-                                <td><?php echo htmlspecialchars($disk['speed_rpm']); ?></td>
-                                <td><?php echo htmlspecialchars($disk['capacity_gb']); ?></td>
+                                <td><?php echo htmlspecialchars($disk['size_gb']); ?></td>
                                 <td>
                                     <div class="actions">
                                         <a class="action-btn edit" href="manage_component.php?do=edit&type=disk&id=<?php echo $disk['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
@@ -252,7 +246,6 @@ if (hesk_SESSION('iserror')) {
                 <table class="table sindu-table">
                     <thead>
                         <tr>
-                            <th><?php echo $hesklang['id'] ?></th>
                             <th><?php echo $hesklang['model'] ?></th>
                             <th><?php echo $hesklang['wattage'] ?></th>
                             <th><?php echo $hesklang['bivolt'] ?></th>
@@ -263,7 +256,6 @@ if (hesk_SESSION('iserror')) {
                         <?php if (hesk_dbNumRows($psus) > 0): ?>
                             <?php while ($psu = hesk_dbFetchAssoc($psus)): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($psu['id']); ?></td>
                                 <td><?php echo htmlspecialchars($psu['model']); ?></td>
                                 <td><?php echo htmlspecialchars($psu['wattage_w']); ?></td>
                                 <td><?php echo $psu['is_bivolt'] ? 'Yes' : 'No'; ?></td>

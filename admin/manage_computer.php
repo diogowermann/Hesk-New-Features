@@ -106,14 +106,55 @@ if ($editing || $viewing) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fetch_components']) && $_POST['fetch_components'] === '1') {
+    $mb_id = intval($_POST['mb_id']);
+    $mb_q  = hesk_dbQuery("
+        SELECT ddr, storage_ifaces
+        FROM `{$dbp}computers_mb`
+        WHERE id = {$mb_id} LIMIT 1
+    ");
+    $mb = hesk_dbFetchAssoc($mb_q);
+
+    $ddr     = hesk_dbEscape($mb['ddr']);
+    $ifs     = array_map('trim', explode(',', $mb['storage_ifaces']));
+    $ifsEsc  = array_map(fn($i)=> "'".hesk_dbEscape($i)."'", $ifs);
+    $ifsList = implode(',', $ifsEsc);
+
+    $ramQ = hesk_dbQuery("
+        SELECT id, model, size_gb, speed_mhz 
+        FROM `{$dbp}computers_ram` 
+        WHERE is_active=1 
+          AND ram_type='{$ddr}'
+    ");
+    $ram = [];
+    while ($row = hesk_dbFetchAssoc($ramQ)) {
+        $ram[] = $row;
+    }
+
+    $diskQ = hesk_dbQuery("
+        SELECT id, model, size_gb, type 
+        FROM `{$dbp}computers_disk` 
+        WHERE is_active=1 
+          AND `interface` IN ({$ifsList})
+    ");
+    $disk = [];
+    while ($row = hesk_dbFetchAssoc($diskQ)) {
+        $disk[] = $row;
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode(['ram' => $ram, 'disk' => $disk]);
+    exit;
+}
+
 // Fetch dropdown data
 $customers   = hesk_dbQuery("SELECT id,name FROM `{$dbp}customers`    WHERE is_active=1");
 $departments = hesk_dbQuery("SELECT id,name FROM `{$dbp}departments`  WHERE is_active=1");
 $cpus        = hesk_dbQuery("SELECT id,model FROM `{$dbp}computers_cpu` WHERE is_active=1");
 $mbs         = hesk_dbQuery("SELECT id,model FROM `{$dbp}computers_mb`  WHERE is_active=1");
 $pss         = hesk_dbQuery("SELECT id,model,wattage_w FROM `{$dbp}computers_ps` WHERE is_active=1");
-$rams        = hesk_dbQuery("SELECT id,model,size_gb,speed_mhz FROM `{$dbp}computers_ram` WHERE is_active=1");
-$disks       = hesk_dbQuery("SELECT id,model,capacity_gb,disk_type FROM `{$dbp}computers_disk` WHERE is_active=1");
+$rams        = hesk_dbQuery("SELECT id,model,size_gb,ram_type FROM `{$dbp}computers_ram` WHERE is_active=1");
+$disks       = hesk_dbQuery("SELECT id,model,size_gb,type FROM `{$dbp}computers_disk` WHERE is_active=1");
 
 // Handle form submit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -260,25 +301,21 @@ if (hesk_SESSION('iserror')) {
 
             <div class="grid-2">
             <!-- RAM -->
-            <div class="form-group">
-            <label><?php echo $hesklang['rams']; ?>:<span class="important">*</span></label>
-            <div class="checkbox-group multi-container">
-                <?php while ($r = hesk_dbFetchAssoc($rams)): ?>
-                <label><input type="checkbox" name="ram_ids[]" value="<?php echo $r['id']; ?>" <?php echo in_array($r['id'], $computer['ram_ids']) ? 'checked' : ''; ?> <?php echo $viewing ? 'disabled' : ''; ?>> <?php echo hesk_htmlspecialchars("{$r['model']} {$r['size_gb']}GB ({$r['speed_mhz']}MHz)"); ?></label>
-                <?php endwhile; ?>
-            </div>
+            <div class="form-group" id="ram_container">
+                <label><?php echo $hesklang['rams']; ?>:<span class="important">*</span></label>
+                <div class="checkbox-group multi-container">
+                    <p>Selecione placa‑mãe primeiro</p>
+                </div>
             </div>
 
             <!-- Disks -->
-            <div class="form-group">
-            <label><?php echo $hesklang['disks']; ?>:</label>
-            <div class="checkbox-group multi-container">
-                <?php while ($d = hesk_dbFetchAssoc($disks)): ?>
-                <label><input type="checkbox" name="disk_ids[]" value="<?php echo $d['id']; ?>" <?php echo in_array($d['id'], $computer['disk_ids']) ? 'checked' : ''; ?> <?php echo $viewing ? 'disabled' : ''; ?>> <?php echo hesk_htmlspecialchars("{$d['model']} {$d['capacity_gb']}GB [{$d['disk_type']}] "); ?></label>
-                <?php endwhile; ?>
-            </div>
-            </div>
+            <div class="form-group" id="disk_container">
+                <label><?php echo $hesklang['disks']; ?>:</label>
+                <div class="checkbox-group multi-container">
+                    <p>Selecione placa‑mãe primeiro</p>
                 </div>
+            </div>
+            </div>
 
             <!-- flags -->
             <div class="form-group grid-4">
@@ -308,6 +345,72 @@ if (hesk_SESSION('iserror')) {
         </form>
     </div>
 </div>
+
+<script>
+$(function(){
+  $('#ram_container .multi-container, #disk_container .multi-container')
+    .html('<p>Selecione placa‑mãe primeiro</p>');
+  $('#ram_container input, #disk_container input').prop('disabled', true);
+
+  function fetchComponents(mbId) {
+    $.ajax({
+      url: 'manage_computer.php',
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        fetch_components: '1',
+        mb_id: mbId
+      },
+      success: function(res) {
+        let $ramBox = $('#ram_container .multi-container').empty();
+        res.ram.forEach(function(r){
+          $ramBox.append(
+            $('<label>').append(
+              $('<input>', {
+                type: 'checkbox',
+                name: 'ram_ids[]',
+                value: r.id
+              })
+            ).append(' '+r.model+' '+r.size_gb+'GB ('+r.speed_mhz+'MHz)')
+          );
+        });
+        $('#ram_container input').prop('disabled', false);
+
+        let $diskBox = $('#disk_container .multi-container').empty();
+        res.disk.forEach(function(d){
+          $diskBox.append(
+            $('<label>').append(
+              $('<input>', {
+                type: 'checkbox',
+                name: 'disk_ids[]',
+                value: d.id
+              })
+            ).append(' '+d.model+' '+d.size_gb+'GB ['+d.type+']')
+          );
+        });
+        $('#disk_container input').prop('disabled', false);
+      }
+    });
+  }
+
+  $('#mb_select').on('change', function(){
+    let mb = $(this).val();
+    if (mb > 0) {
+      fetchComponents(mb);
+    } else {
+      $('#ram_container .multi-container, #disk_container .multi-container')
+        .html('<p>Selecione placa‑mãe primeiro</p>');
+      $('#ram_container input, #disk_container input').prop('disabled', true);
+    }
+  });
+
+  let initMb = $('#mb_select').val();
+  if (initMb > 0) {
+    fetchComponents(initMb);
+  }
+});
+</script>
+
 
 <?php
 function try_save_computer() {
