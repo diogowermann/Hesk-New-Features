@@ -2228,18 +2228,15 @@ $hesklang['edit_component']='Edit component';
 $hesklang['view_component']='View component';
 $hesklang['create_component']='Create component';
 $hesklang['components']='Components';
-$hesklang['ram_max_storage_gb']='Max RAM (GB)';
-$hesklang['ram_max_speed_mhz']='Max RAM Speed (MHz)';
+$hesklang['max_ram_gb']='Max RAM (GB)';
 $hesklang['network_iface']='Network Interface';
-$hesklang['usb_ports']='Quantity of USB Ports';
-$hesklang['video_ports']='Video Ports';
 $hesklang['storage_ifaces']='Types of Storage Interfaces';
 $hesklang['is_bivolt']='Bivolt';
 $hesklang['wattage_w']='Wattage (W)';
 $hesklang['create']='Create';
 $hesklang['invalid_type']='Invalid type of asset';
 $hesklang['delete_confirm']='Confirm delete';
-$hesklang['ethernet']='Ethernet';
+$hesklang['cable']='Cable';
 $hesklang['wifi']='WiFi';
 $hesklang['ram_has_inactive']='RAM has inactive modules';
 $hesklang['disk_has_inactive']='Disk has inactive modules';
@@ -2284,6 +2281,12 @@ $hesklang['update_hz']='Update Hz';
 $hesklang['size_in']='Size (inches)';
 $hesklang['edit_customer']='Edit customer';
 $hesklang['create_customer']='Create customer';
+$hesklang['ghz']='GHz';
+$hesklang['link']='Link';
+$hesklang['both']='Both';
+$hesklang['asset_deleted']='Asset deleted successfully';
+$hesklang['component_added']='Component %s added successfully';
+$hesklang['invalid_component']='Invalid component';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
