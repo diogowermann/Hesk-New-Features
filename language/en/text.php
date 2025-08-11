@@ -2286,6 +2286,7 @@ $hesklang['link']='Link';
 $hesklang['both']='Both';
 $hesklang['asset_deleted']='Asset deleted successfully';
 $hesklang['component_added']='Component %s added successfully';
+$hesklang['component_updated']='Component %s updated successfully';
 $hesklang['invalid_component']='Invalid component';
 // END CUSTOM
 

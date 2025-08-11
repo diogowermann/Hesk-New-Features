@@ -63,6 +63,7 @@ switch ($type) {
             'ghz'        => '',
             'gpu'        => '',
             'link'       => '',
+            'stock'      => 1,
             'created_at' => '',
             'updated_at' => '',
         ];
@@ -75,6 +76,7 @@ switch ($type) {
             'interface'   => '',
             'size_gb'     => '',
             'link'        => '',
+            'stock'       => 1,
             'created_at'  => '',
             'updated_at'  => '',
         ];
@@ -90,6 +92,7 @@ switch ($type) {
             'network_iface'  => '',
             'storage_ifaces' => '',
             'link'           => '',
+            'stock'          => 1,
             'created_at'     => '',
             'updated_at'     => '',
         ];
@@ -100,6 +103,7 @@ switch ($type) {
             'model'      => '',
             'wattage_w'  => '',
             'is_bivolt'  => 0,
+            'stock'      => 1,
             'created_at' => '',
             'updated_at' => '',
         ];
@@ -112,6 +116,7 @@ switch ($type) {
             'speed_mhz'  => '',
             'ram_type'   => '',
             'link'       => '',
+            'stock'      => 1,
             'created_at' => '',
             'updated_at' => '',
         ];
@@ -122,8 +127,7 @@ switch ($type) {
 $id = hesk_GET('id', 0);
 if ($editing || $viewing) {
     $res = hesk_dbQuery("
-        SELECT * 
-        FROM `{$dbp}{$type}` 
+        SELECT * FROM `{$dbp}{$type}` 
         WHERE `id` = {$id} 
         LIMIT 1
     ");
@@ -180,35 +184,42 @@ if (hesk_SESSION('iserror')) {
             <input type="hidden" name="original_id" value="<?php echo $id; ?>">
             <input type="hidden" name="type" value="<?php echo htmlspecialchars($type_param); ?>">
             <?php
+            if ($editing): ?>
+            <input type="hidden" name="edit" value="1">
+            <?php endif;
             switch ($type) {
                 case 'cpu':
                     ?>
                     <div class="grid-3">
                         <div class="form-group">
-                            <label for="model"><?php echo $hesklang['model']; ?></label>
+                            <label for="model"><?php echo $hesklang['model']; ?>:<span class="important">*</span></label>
                             <input type="text" name="model" id="model" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['model']); ?>" required <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="cores"><?php echo $hesklang['cores']; ?></label>
+                            <label for="cores"><?php echo $hesklang['cores']; ?>:<span class="important">*</span></label>
                             <input type="number" name="cores" id="cores" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['cores']); ?>" min="1" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="threads"><?php echo $hesklang['threads']; ?></label>
+                            <label for="threads"><?php echo $hesklang['threads']; ?>:<span class="important">*</span></label>
                             <input type="number" name="threads" id="threads" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['threads']); ?>" min="1" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                     </div>
-                    <div class="grid-3">
+                    <div class="grid-4">
                         <div class="form-group">
-                            <label for="ghz"><?php echo $hesklang['ghz']; ?></label>
+                            <label for="ghz"><?php echo $hesklang['ghz']; ?>:</label>
                             <input type="number" name="ghz" id="ghz" class="form-control" step="0.1" value="<?php echo hesk_htmlspecialchars($default_values['ghz']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="gpu"><?php echo $hesklang['gpu']; ?></label>
+                            <label for="gpu"><?php echo $hesklang['gpu']; ?>:</label>
                             <input type="text" name="gpu" id="gpu" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['gpu']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="link"><?php echo $hesklang['link']; ?></label>
+                            <label for="link"><?php echo $hesklang['link']; ?>:</label>
                             <input type="url" name="link" id="link" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['link']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
+                        </div>
+                        <div class="form-group">
+                            <label for="stock"><?php echo $hesklang['stock']; ?>:</label>
+                            <input type="number" name="stock" id="stock" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['stock']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                     </div>
                     <?php if ($viewing): ?>
@@ -227,17 +238,21 @@ if (hesk_SESSION('iserror')) {
 
                 case 'disk':
                     ?>
-                    <div class="grid-3">
+                    <div class="grid-4">
                         <div class="form-group">
-                            <label for="model"><?php echo $hesklang['model']; ?></label>
+                            <label for="model"><?php echo $hesklang['model']; ?>:<span class="important">*</span></label>
                             <input type="text" name="model" id="model" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['model']); ?>" required <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="size_gb"><?php echo $hesklang['size_gb']; ?></label>
+                            <label for="size_gb"><?php echo $hesklang['size_gb']; ?>:<span class="important">*</span></label>
                             <input type="number" name="size_gb" id="size_gb" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['size_gb']); ?>" min="1" required <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="interface"><?php echo $hesklang['interface']; ?></label>
+                            <label for="stock"><?php echo $hesklang['stock']; ?>:</label>
+                            <input type="number" name="stock" id="stock" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['stock']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
+                        </div>
+                        <div class="form-group">
+                            <label for="interface"><?php echo $hesklang['interface']; ?>:<span class="important">*</span></label>
                             <div class="flex-options">
                                 <label>
                                     <input type="radio" name="interface" value="SATA" <?php if ($default_values['interface'] === 'SATA') echo 'checked'; ?> required <?php if ($viewing) echo 'disabled'; ?>>
@@ -264,11 +279,11 @@ if (hesk_SESSION('iserror')) {
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="link"><?php echo $hesklang['link']; ?></label>
+                            <label for="link"><?php echo $hesklang['link']; ?>:</label>
                             <input type="url" name="link" id="link" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['link']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="disk_type"><?php echo $hesklang['type']; ?></label>
+                            <label for="disk_type"><?php echo $hesklang['type']; ?>:<span class="important">*</span></label>
                             <div class="flex-options">
                                 <label>
                                     <input type="radio" name="disk_type" value="HDD" <?php if ($default_values['type'] === 'HDD') echo 'checked'; ?> required <?php if ($viewing) echo 'disabled'; ?>>
@@ -297,26 +312,30 @@ if (hesk_SESSION('iserror')) {
 
                 case 'mb':
                     ?>
-                    <div class="grid-3">
+                    <div class="grid-4">
                         <div class="form-group">
-                            <label for="model"><?php echo $hesklang['model']; ?></label>
+                            <label for="model"><?php echo $hesklang['model']; ?>:<span class="important">*</span></label>
                             <input type="text" name="model" id="model" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['model']); ?>" required <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="ram_slots"><?php echo $hesklang['ram_slots']; ?></label>
+                            <label for="ram_slots"><?php echo $hesklang['ram_slots']; ?>:</label>
                             <input type="number" name="ram_slots" id="ram_slots" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['ram_slots']); ?>" min="1" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="max_ram_gb"><?php echo $hesklang['max_ram_gb']; ?></label>
+                            <label for="max_ram_gb"><?php echo $hesklang['max_ram_gb']; ?>:</label>
                             <input type="number" name="max_ram_gb" id="max_ram_gb" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['max_ram_gb']); ?>" min="1" <?php if ($viewing) echo 'disabled'; ?>>
+                        </div>
+                        <div class="form-group">
+                            <label for="stock"><?php echo $hesklang['stock']; ?>:</label>
+                            <input type="number" name="stock" id="stock" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['stock']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                     </div>
                     <div class="grid-3">
                         <div class="form-group">
-                            <label for="network_iface"><?php echo $hesklang['network_iface']; ?></label>
+                            <label for="network_iface"><?php echo $hesklang['network_iface']; ?>:</label>
                             <div class="flex-options">
                                 <label>
-                                    <input type="radio" name="network_iface" value="cable" <?php if ($default_values['network_iface'] === 'Ethernet') echo 'checked'; ?> required <?php if ($viewing) echo 'disabled'; ?>>
+                                    <input type="radio" name="network_iface" value="cable" <?php if ($default_values['network_iface'] === 'Ethernet') echo 'checked'; ?> <?php if ($viewing) echo 'disabled'; ?>>
                                     <?php echo $hesklang['cable']; ?>
                                 </label>
                                 <label>
@@ -330,7 +349,7 @@ if (hesk_SESSION('iserror')) {
                             </div>                    
                         </div>
                         <div class="form-group">
-                            <label for="ddr"><?php echo $hesklang['rams']; ?> <?php echo $hesklang['type']; ?></label>
+                            <label for="ddr"><?php echo $hesklang['rams']; ?> <?php echo $hesklang['type']; ?>:<span class="important">*</span></label>
                             <div class="flex-options">
                                 <label>
                                     <input type="radio" name="ddr" value="DDR3" <?php if ($default_values['ddr'] === 'DDR3') echo 'checked'; ?> required <?php if ($viewing) echo 'disabled'; ?>>
@@ -347,10 +366,10 @@ if (hesk_SESSION('iserror')) {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="storage_ifaces"><?php echo $hesklang['storage_ifaces']; ?></label>
+                            <label for="storage_ifaces"><?php echo $hesklang['storage_ifaces']; ?>:<span class="important">*</span></label>
                             <div class="flex-options">
                                 <label>
-                                    <input type="checkbox" name="storage_ifaces[]" value="SATA" <?php if (strpos($default_values['storage_ifaces'], 'SATA') !== false) echo 'checked'; ?> required <?php if ($viewing) echo 'disabled'; ?>>
+                                    <input type="checkbox" name="storage_ifaces[]" value="SATA" <?php if (strpos($default_values['storage_ifaces'], 'SATA') !== false) echo 'checked'; ?> <?php if ($viewing) echo 'disabled'; ?>>
                                     SATA
                                 </label>
                                 <label>
@@ -370,11 +389,11 @@ if (hesk_SESSION('iserror')) {
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="chipset"><?php echo $hesklang['chipset']; ?></label>
-                            <input type="text" name="chipset" id="chipset" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['chipset']); ?>" required <?php if ($viewing) echo 'disabled'; ?>>
+                            <label for="chipset"><?php echo $hesklang['chipset']; ?>:</label>
+                            <input type="text" name="chipset" id="chipset" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['chipset']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="link"><?php echo $hesklang['link']; ?></label>
+                            <label for="link"><?php echo $hesklang['link']; ?>:</label>
                             <input type="url" name="link" id="link" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['link']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                     </div>
@@ -394,17 +413,21 @@ if (hesk_SESSION('iserror')) {
 
                 case 'ps':
                     ?>
-                    <div class="grid-3">
+                    <div class="grid-4">
                         <div class="form-group">
-                            <label for="model"><?php echo $hesklang['model']; ?></label>
+                            <label for="model"><?php echo $hesklang['model']; ?>:<span class="important">*</span></label>
                             <input type="text" name="model" id="model" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['model']); ?>" required <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="wattage_w"><?php echo $hesklang['wattage_w']; ?></label>
+                            <label for="wattage_w"><?php echo $hesklang['wattage_w']; ?>:<span class="important">*</span></label>
                             <input type="number" name="wattage_w" id="wattage_w" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['wattage_w']); ?>" min="1" required <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="is_bivolt"><?php echo $hesklang['is_bivolt']; ?></label>
+                            <label for="stock"><?php echo $hesklang['stock']; ?>:</label>
+                            <input type="number" name="stock" id="stock" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['stock']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
+                        </div>
+                        <div class="form-group">
+                            <label for="is_bivolt"><?php echo $hesklang['is_bivolt']; ?>:</label>
                             <input type="checkbox" name="is_bivolt" value="is_bivolt" <?php if ($default_values['is_bivolt']) echo 'checked'; ?> <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                     </div>
@@ -424,27 +447,31 @@ if (hesk_SESSION('iserror')) {
 
                 case 'ram':
                     ?>
-                    <div class="grid-2">
+                    <div class="grid-3">
                         <div class="form-group">
-                            <label for="model"><?php echo $hesklang['model']; ?></label>
+                            <label for="model"><?php echo $hesklang['model']; ?>:<span class="important">*</span></label>
                             <input type="text" name="model" id="model" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['model']); ?>" required <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="size_gb"><?php echo $hesklang['size_gb']; ?></label>
+                            <label for="size_gb"><?php echo $hesklang['size_gb']; ?>:<span class="important">*</span></label>
                             <input type="number" name="size_gb" id="size_gb" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['size_gb']); ?>" min="1" required <?php if ($viewing) echo 'disabled'; ?>>
+                        </div>
+                        <div class="form-group">
+                            <label for="stock"><?php echo $hesklang['stock']; ?>:</label>
+                            <input type="number" name="stock" id="stock" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['stock']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                     </div>
                     <div class="grid-3">
                         <div class="form-group">
-                            <label for="speed_mhz"><?php echo $hesklang['speed_mhz']; ?></label>
+                            <label for="speed_mhz"><?php echo $hesklang['speed_mhz']; ?>:</label>
                             <input type="number" name="speed_mhz" id="speed_mhz" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['speed_mhz']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="link"><?php echo $hesklang['link']; ?></label>
+                            <label for="link"><?php echo $hesklang['link']; ?>:</label>
                             <input type="url" name="link" id="link" class="form-control" value="<?php echo hesk_htmlspecialchars($default_values['link']); ?>" <?php if ($viewing) echo 'disabled'; ?>>
                         </div>
                         <div class="form-group">
-                            <label for="ram_type"><?php echo $hesklang['type']; ?></label>
+                            <label for="ram_type"><?php echo $hesklang['type']; ?>:<span class="important">*</span></label>
                             <div class="flex-options">
                                 <label>
                                     <input type="radio" name="ram_type" value="DDR3" <?php if ($default_values['ram_type'] === 'DDR3') echo 'checked'; ?> required <?php if ($viewing) echo 'disabled'; ?>>
@@ -492,13 +519,9 @@ function try_save_component() {
     hesk_token_check('POST');
 
     $orig_id = intval(hesk_POST('original_id', 0));
+    $edit = hesk_POST('edit');
     $data      = [];
     $required  = []; 
-    
-    // Determine if editing based on POSTed id if $editing is not set
-    if (!isset($editing) || !$editing) {
-        $editing = ($orig_id > 0);
-    }
 
     switch ($type) {
         case 'cpu':
@@ -508,9 +531,10 @@ function try_save_component() {
                 'threads' => intval(hesk_POST('threads', 0)),
                 'ghz'     => hesk_POST('ghz'),
                 'gpu'     => hesk_input(hesk_POST('gpu')),
-                'link'    => hesk_input(hesk_POST('link'))
+                'link'    => hesk_input(hesk_POST('link')),
+                'stock'   => intval(hesk_POST('stock', 0)),
             ];
-            $required = ['model'];
+            $required = ['model', 'cores', 'threads'];
             break;
 
         case 'disk':
@@ -519,9 +543,10 @@ function try_save_component() {
                 'type'      => hesk_POST('disk_type'),
                 'interface' => hesk_POST('interface'),
                 'size_gb'   => intval(hesk_POST('size_gb', 0)),
-                'link'      => hesk_input(hesk_POST('link'))
+                'link'      => hesk_input(hesk_POST('link')),
+                'stock'     => intval(hesk_POST('stock', 0)),
             ];
-            $required = ['model', 'size_gb'];
+            $required = ['model', 'size_gb', 'interface', 'type'];
             break;
 
         case 'mb':
@@ -542,9 +567,10 @@ function try_save_component() {
                 'network_iface'  => hesk_POST('network_iface'),
                 'storage_ifaces' => $csv('storage_ifaces'),
                 'chipset'        => hesk_input(hesk_POST('chipset')),
-                'link'           => hesk_input(hesk_POST('link'))
+                'link'           => hesk_input(hesk_POST('link')),
+                'stock'          => intval(hesk_POST('stock', 0)),
             ];
-            $required = ['model', 'ram_slots', 'ddr', 'max_ram_gb'];
+            $required = ['model', 'ddr', 'storage_ifaces'];
             break;
 
         case 'ps':
@@ -552,6 +578,7 @@ function try_save_component() {
                 'model'     => hesk_input(hesk_POST('model')),
                 'wattage_w' => intval(hesk_POST('wattage_w', 0)),
                 'is_bivolt' => isset($_POST['is_bivolt']) ? 1 : 0,
+                'stock'     => intval(hesk_POST('stock', 0)),
             ];
             $required = ['model', 'wattage_w'];
             break;
@@ -559,17 +586,19 @@ function try_save_component() {
         case 'ram':
             $data = [
                 'model'     => hesk_input(hesk_POST('model')),
-                'size_gb'   => intval(hesk_POST('size_gb', 0)),
+                'size_gb'   => intval(hesk_POST('size_gb')),
                 'speed_mhz' => hesk_POST('speed_mhz') === '' ? null : intval(hesk_POST('speed_mhz')),
                 'ram_type'  => hesk_POST('ram_type'),
-                'link' => hesk_input(hesk_POST('link'))
+                'link' => (hesk_POST('link') === '' ? null : hesk_input(hesk_POST('link'))),
+                'stock'     => intval(hesk_POST('stock', 0)),
             ];
             $required = ['model', 'size_gb', 'ram_type'];
             break;
     }
 
     // Required fields for creation
-    if (!$editing) {
+    if (!$edit) {
+        $data['is_active'] = 1;
         foreach ($required as $k) {
             if ($data[$k] === '' || $data[$k] === null) {
                 $_SESSION['iserror'] = 1;
@@ -597,27 +626,43 @@ function try_save_component() {
         }
     }
     $cols = implode(",\n        ", $cols);
-    error_log("COLS: " . print_r($cols, true));
-    error_log("DATA: " . print_r($data, true));
 
     // Execute queries
-    if ($editing) {
+    if ($edit) {
         $result = hesk_dbQuery("UPDATE `{$dbp}{$type}` SET $cols WHERE `id` = $orig_id");
         if (!$result) {
             die('SQL Error: ' . mysqli_error($GLOBALS['hesk_db_link']));
         }
         $msg = sprintf($hesklang['component_updated'], '<i>' . hesk_htmlspecialchars($data['model']) . '</i>');
     } else {
-        error_log("QUERY: INSERT INTO `{$dbp}{$type}` SET $cols");
-        $result = hesk_dbQuery("INSERT INTO `{$dbp}{$type}` SET $cols");
+        $columns = [];
+        $values = [];        
+        foreach ($data as $col => $val) {
+            $columns[] = "`$col`";
+            
+            if ($val === '' || $val === null) {
+                $values[] = "NULL";
+            } elseif (is_numeric($val)) {
+                $values[] = $val;
+            } else {
+                $values[] = "'" . hesk_dbEscape($val) . "'";
+            }
+        }        
+        $columns = implode(", ", $columns);
+        $values = implode(", ", $values);
+
+        $result = hesk_dbQuery("INSERT INTO `{$dbp}{$type}` ($columns) VALUES ($values)");
+        
         if (!$result) {
             error_log('SQL Error: ' . mysqli_error($GLOBALS['hesk_db_link']));
             die('SQL Error: ' . mysqli_error($GLOBALS['hesk_db_link']));
         }
+        $msg = sprintf($hesklang['component_added'], '<i>' . hesk_htmlspecialchars($data['model']) . '</i>');
     }
     
     hesk_cleanSessionVars('iserror');
-    hesk_process_messages(sprintf($hesklang['component_added'],'<i>'.stripslashes($data['model']).'</i>'),'manage_components.php','SUCCESS');
+    hesk_process_messages($msg,'manage_components.php','SUCCESS');
     exit;
 }
 require_once(HESK_PATH . 'inc/footer.inc.php');
+?>

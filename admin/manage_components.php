@@ -54,7 +54,6 @@ if (!hesk_SESSION('error')) {
     </section>
 
     <div class="component-tables">
-        <!-- CPU Table -->
         <div class="table-wrap">
             <div class="table-header">
                 <h3><?php echo $hesklang['cpu'] ?></h3>
@@ -69,6 +68,7 @@ if (!hesk_SESSION('error')) {
                             <th><?php echo $hesklang['threads'] ?></th>
                             <th><?php echo $hesklang['ghz'] ?></th>
                             <th><?php echo $hesklang['gpu'] ?></th>
+                            <th><?php echo $hesklang['stock'] ?></th>
                             <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
@@ -81,6 +81,7 @@ if (!hesk_SESSION('error')) {
                                 <td><?php echo htmlspecialchars($cpu['threads']); ?></td>
                                 <td><?php echo htmlspecialchars($cpu['ghz']); ?></td>
                                 <td><?php echo htmlspecialchars($cpu['gpu']); ?></td>
+                                <td><?php echo htmlspecialchars($cpu['stock']); ?></td>
                                 <td>
                                     <div class="actions">
                                         <a class="action-btn edit" href="manage_component.php?do=edit&type=cpu&id=<?php echo $cpu['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
@@ -92,7 +93,7 @@ if (!hesk_SESSION('error')) {
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="6" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
+                                <td colspan="7" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -100,7 +101,6 @@ if (!hesk_SESSION('error')) {
             </div>
         </div>
 
-        <!-- RAM Table -->
         <div class="table-wrap">
             <div class="table-header">
                 <h3><?php echo $hesklang['ram_modules'] ?></h3>
@@ -110,11 +110,11 @@ if (!hesk_SESSION('error')) {
                 <table class="table sindu-table">
                     <thead>
                         <tr>
-                            <th><?php echo $hesklang['id'] ?></th>
                             <th><?php echo $hesklang['model'] ?></th>
                             <th><?php echo $hesklang['size_gb'] ?></th>
                             <th><?php echo $hesklang['speed_mhz'] ?></th>
                             <th><?php echo $hesklang['type'] ?></th>
+                            <th><?php echo $hesklang['stock'] ?></th>
                             <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
@@ -122,11 +122,11 @@ if (!hesk_SESSION('error')) {
                         <?php if (hesk_dbNumRows($rams) > 0): ?>
                             <?php while ($ram = hesk_dbFetchAssoc($rams)): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($ram['id']); ?></td>
                                 <td><?php if ($ram['link']): ?><a href="<?php echo $ram['link']; ?>" ><?php endif; echo htmlspecialchars($ram['model']); if ($ram['link']): ?></a><?php endif; ?></td>
                                 <td><?php echo htmlspecialchars($ram['size_gb']); ?></td>
                                 <td><?php echo htmlspecialchars($ram['speed_mhz']); ?></td>
                                 <td><?php echo htmlspecialchars($ram['ram_type']); ?></td>
+                                <td><?php echo htmlspecialchars($ram['stock']); ?></td>
                                 <td>
                                     <div class="actions">
                                         <a class="action-btn edit" href="manage_component.php?do=edit&type=ram&id=<?php echo $ram['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
@@ -146,7 +146,6 @@ if (!hesk_SESSION('error')) {
             </div>
         </div>
 
-        <!-- Motherboard Table -->
         <div class="table-wrap">
             <div class="table-header">
                 <h3><?php echo $hesklang['motherboard'] ?></h3>
@@ -161,6 +160,7 @@ if (!hesk_SESSION('error')) {
                             <th><?php echo $hesklang['type'] ?></th>
                             <th><?php echo $hesklang['max_ram_gb'] ?></th>
                             <th><?php echo $hesklang['chipset'] ?></th>
+                            <th><?php echo $hesklang['stock'] ?></th>
                             <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
@@ -173,55 +173,12 @@ if (!hesk_SESSION('error')) {
                                 <td><?php echo htmlspecialchars($mb['ddr']); ?></td>
                                 <td><?php echo htmlspecialchars($mb['max_ram_gb']); ?></td>
                                 <td><?php echo htmlspecialchars($mb['chipset']); ?></td>
+                                <td><?php echo htmlspecialchars($mb['stock']); ?></td>
                                 <td>
                                     <div class="actions">
                                         <a class="action-btn edit" href="manage_component.php?do=edit&type=motherboard&id=<?php echo $mb['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
                                         <a class="action-btn view" href="manage_component.php?do=view&type=motherboard&id=<?php echo $mb['id'] ?>"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-close"></use></svg></a>
                                         <a class="action-btn delete" href="manage_component.php?do=delete&type=motherboard&id=<?php echo $mb['id'] ?>" onclick="return confirm('<?php echo $hesklang['delete_confirm'].' '.$mb['model'].'?' ?>')"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="8" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Disk Table -->
-        <div class="table-wrap">
-            <div class="table-header">
-                <h3><?php echo $hesklang['disks'] ?></h3>
-                <a class="btn btn--blue-border"  href="manage_component.php?type=disk"><?php echo $hesklang['add_new_component'] ?></a>
-            </div>
-            <div class="table table-scroll">
-                <table class="table sindu-table">
-                    <thead>
-                        <tr>
-                            <th><?php echo $hesklang['model'] ?></th>
-                            <th><?php echo $hesklang['type'] ?></th>
-                            <th><?php echo $hesklang['interface'] ?></th>
-                            <th><?php echo $hesklang['size_gb'] ?></th>
-                            <th><?php echo $hesklang['actions'] ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (hesk_dbNumRows($disks) > 0): ?>
-                            <?php while ($disk = hesk_dbFetchAssoc($disks)): ?>
-                            <tr>
-                                <td><?php if ($disk['link']): ?><a href="<?php echo $disk['link']; ?>" ><?php endif; echo htmlspecialchars($disk['model']); if ($disk['link']): ?></a><?php endif; ?></td>
-                                <td><?php echo htmlspecialchars($disk['type']); ?></td>
-                                <td><?php echo htmlspecialchars($disk['interface']); ?></td>
-                                <td><?php echo htmlspecialchars($disk['size_gb']); ?></td>
-                                <td>
-                                    <div class="actions">
-                                        <a class="action-btn edit" href="manage_component.php?do=edit&type=disk&id=<?php echo $disk['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
-                                        <a class="action-btn view" href="manage_component.php?do=view&type=disk&id=<?php echo $disk['id'] ?>"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-close"></use></svg></a>
-                                        <a class="action-btn delete" href="manage_component.php?do=delete&type=disk&id=<?php echo $disk['id'] ?>" onclick="return confirm('<?php echo $hesklang['delete_confirm'].' '.$disk['model'].'?' ?>')"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
                                     </div>
                                 </td>
                             </tr>
@@ -236,7 +193,51 @@ if (!hesk_SESSION('error')) {
             </div>
         </div>
 
-        <!-- PSU Table -->
+        <div class="table-wrap">
+            <div class="table-header">
+                <h3><?php echo $hesklang['disks'] ?></h3>
+                <a class="btn btn--blue-border"  href="manage_component.php?type=disk"><?php echo $hesklang['add_new_component'] ?></a>
+            </div>
+            <div class="table table-scroll">
+                <table class="table sindu-table">
+                    <thead>
+                        <tr>
+                            <th><?php echo $hesklang['model'] ?></th>
+                            <th><?php echo $hesklang['type'] ?></th>
+                            <th><?php echo $hesklang['interface'] ?></th>
+                            <th><?php echo $hesklang['size_gb'] ?></th>
+                            <th><?php echo $hesklang['stock'] ?></th>
+                            <th><?php echo $hesklang['actions'] ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (hesk_dbNumRows($disks) > 0): ?>
+                            <?php while ($disk = hesk_dbFetchAssoc($disks)): ?>
+                            <tr>
+                                <td><?php if ($disk['link']): ?><a href="<?php echo $disk['link']; ?>" ><?php endif; echo htmlspecialchars($disk['model']); if ($disk['link']): ?></a><?php endif; ?></td>
+                                <td><?php echo htmlspecialchars($disk['type']); ?></td>
+                                <td><?php echo htmlspecialchars($disk['interface']); ?></td>
+                                <td><?php echo htmlspecialchars($disk['size_gb']); ?></td>
+                                <td><?php echo htmlspecialchars($disk['stock']); ?></td>
+                                <td>
+                                    <div class="actions">
+                                        <a class="action-btn edit" href="manage_component.php?do=edit&type=disk&id=<?php echo $disk['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>
+                                        <a class="action-btn view" href="manage_component.php?do=view&type=disk&id=<?php echo $disk['id'] ?>"><svg class="icon icon-view"><use xlink:href="../img/sprite.svg#icon-eye-close"></use></svg></a>
+                                        <a class="action-btn delete" href="manage_component.php?do=delete&type=disk&id=<?php echo $disk['id'] ?>" onclick="return confirm('<?php echo $hesklang['delete_confirm'].' '.$disk['model'].'?' ?>')"><svg class="icon icon-delete"><use xlink:href="../img/sprite.svg#icon-delete"></use></svg></a>   
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="no-data"><?php echo $hesklang['no_data_found']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="table-wrap">
             <div class="table-header">
                 <h3><?php echo $hesklang['power_supplies'] ?></h3>
@@ -249,6 +250,7 @@ if (!hesk_SESSION('error')) {
                             <th><?php echo $hesklang['model'] ?></th>
                             <th><?php echo $hesklang['wattage'] ?></th>
                             <th><?php echo $hesklang['bivolt'] ?></th>
+                            <th><?php echo $hesklang['stock'] ?></th>
                             <th><?php echo $hesklang['actions'] ?></th>
                         </tr>
                     </thead>
@@ -259,6 +261,7 @@ if (!hesk_SESSION('error')) {
                                 <td><?php echo htmlspecialchars($psu['model']); ?></td>
                                 <td><?php echo htmlspecialchars($psu['wattage_w']); ?></td>
                                 <td><?php echo $psu['is_bivolt'] ? 'Yes' : 'No'; ?></td>
+                                <td><?php echo htmlspecialchars($psu['stock']); ?></td>
                                 <td>
                                     <div class="actions">
                                         <a class="action-btn edit" href="manage_component.php?do=edit&type=psu&id=<?php echo $psu['id'] ?>"><svg class="icon icon-edit-ticket"><use xlink:href="../img/sprite.svg#icon-edit-ticket"></use></svg></a>

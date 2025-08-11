@@ -62,8 +62,7 @@ $computer = [
 $comp_id  = intval(hesk_GET('id', 0));
 if ($editing || $viewing) {
     $res = hesk_dbQuery("
-        SELECT * 
-        FROM `{$dbp}computers` 
+        SELECT * FROM `{$dbp}computers` 
         WHERE `id` = {$comp_id} 
         LIMIT 1
     ");
@@ -96,6 +95,19 @@ if ($editing || $viewing) {
         $computer['disk_ids'][] = $d['disk_id'];
     }
 } elseif ($deleting && ($comp_id > 0)) {
+    // Return components to stock
+    // RAM
+    $res_ram = hesk_dbQuery("SELECT `ram_id` FROM `{$dbp}computer_has_ram` WHERE `computer_id` = {$comp_id}");
+    while ($row = hesk_dbFetchAssoc($res_ram)) {
+        hesk_dbQuery("UPDATE `{$dbp}computers_ram` SET `stock` = `stock` + 1 WHERE `id` = {$row['ram_id']}");
+    }
+
+    // DISK
+    $res_disk = hesk_dbQuery("SELECT `disk_id` FROM `{$dbp}computer_has_disk` WHERE `computer_id` = {$comp_id}");
+    while ($row = hesk_dbFetchAssoc($res_disk)) {
+        hesk_dbQuery("UPDATE `{$dbp}computers_disk` SET `stock` = `stock` + 1 WHERE `id` = {$row['disk_id']}");
+    }
+    
     $res = hesk_dbQuery("
         UPDATE `{$dbp}computers` 
         SET `is_active` = 0 
@@ -121,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fetch_components']) &
     $ifsList = implode(',', $ifsEsc);
 
     $ramQ = hesk_dbQuery("
-        SELECT id, model, size_gb, speed_mhz 
+        SELECT id, model, size_gb, speed_mhz, stock
         FROM `{$dbp}computers_ram` 
         WHERE is_active=1 
           AND ram_type='{$ddr}'
@@ -132,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fetch_components']) &
     }
 
     $diskQ = hesk_dbQuery("
-        SELECT id, model, size_gb, type 
+        SELECT id, model, size_gb, type, stock
         FROM `{$dbp}computers_disk` 
         WHERE is_active=1 
           AND `interface` IN ({$ifsList})
@@ -150,11 +162,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fetch_components']) &
 // Fetch dropdown data
 $customers   = hesk_dbQuery("SELECT id,name FROM `{$dbp}customers`    WHERE is_active=1");
 $departments = hesk_dbQuery("SELECT id,name FROM `{$dbp}departments`  WHERE is_active=1");
-$cpus        = hesk_dbQuery("SELECT id,model FROM `{$dbp}computers_cpu` WHERE is_active=1");
-$mbs         = hesk_dbQuery("SELECT id,model FROM `{$dbp}computers_mb`  WHERE is_active=1");
-$pss         = hesk_dbQuery("SELECT id,model,wattage_w FROM `{$dbp}computers_ps` WHERE is_active=1");
-$rams        = hesk_dbQuery("SELECT id,model,size_gb,ram_type FROM `{$dbp}computers_ram` WHERE is_active=1");
-$disks       = hesk_dbQuery("SELECT id,model,size_gb,type FROM `{$dbp}computers_disk` WHERE is_active=1");
+$cpus        = hesk_dbQuery("SELECT id,model FROM `{$dbp}computers_cpu` WHERE is_active=1 AND stock>0");
+$mbs         = hesk_dbQuery("SELECT id,model FROM `{$dbp}computers_mb`  WHERE is_active=1 AND stock>0");
+$pss         = hesk_dbQuery("SELECT id,model,wattage_w FROM `{$dbp}computers_ps` WHERE is_active=1 AND stock>0");
+$rams        = hesk_dbQuery("SELECT id,model,size_gb,ram_type,stock FROM `{$dbp}computers_ram` WHERE is_active=1 AND stock>0");
+$disks       = hesk_dbQuery("SELECT id,model,size_gb,type,stock FROM `{$dbp}computers_disk` WHERE is_active=1 AND stock>0");
 
 // Handle form submit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -168,6 +180,11 @@ if (hesk_SESSION('iserror')) {
     hesk_handle_messages();
 }
 ?>
+<script>
+    var existingRamIds = <?php echo json_encode($computer['ram_ids']); ?>;
+    var existingDiskIds = <?php echo json_encode($computer['disk_ids']); ?>;
+    var isViewing = <?php echo $viewing ? 'true' : 'false'; ?>;
+</script>
 <div class="main__content assets asset-create">
     <section class="assets__head">
         <h2>
@@ -180,11 +197,10 @@ if (hesk_SESSION('iserror')) {
             <input type="hidden" name="token" value="<?php hesk_token_echo(); ?>">
             <input type="hidden" name="original_id" value="<?php echo $comp_id; ?>">
 
-            <!-- Row 1: Asset Tag / Name -->
             <div class="grid-2">
             <div class="form-group">
                 <label for="asset_tag"><?php echo $hesklang['asset_tag']; ?>:</label>
-                <input type="text" id="asset_tag" name="asset_tag" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['asset_tag']); ?>" <?php echo ($editing || $viewing) ? 'disabled' : ''; ?>>
+                <input type="text" id="asset_tag" name="asset_tag" class="form-control" maxlength="50" value="<?php echo hesk_htmlspecialchars($computer['asset_tag']); ?>" <?php echo $viewing ? 'disabled' : ''; ?>>
                 <?php if ($editing || $viewing): ?>
                     <input type="hidden" name="asset_tag" value="<?php echo $computer['asset_tag']; ?>">
                 <?php endif; ?>
@@ -195,11 +211,10 @@ if (hesk_SESSION('iserror')) {
             </div>
             </div>
 
-            <!-- Row 2: MAC / OS -->
             <div class="grid-3">
             <div class="form-group">
                 <label for="mac"><?php echo $hesklang['mac_address']; ?>:<span class="important">*</span></label>
-                <input type="text" id="mac" name="mac" class="form-control" maxlength="17" placeholder="00:1B:44:11:3A:B7" value="<?php echo hesk_htmlspecialchars($computer['mac_address']); ?>" <?php echo ($editing || $viewing) ? 'disabled' : ''; ?>>
+                <input type="text" id="mac" name="mac" class="form-control" maxlength="17" placeholder="00:1B:44:11:3A:B7" value="<?php echo hesk_htmlspecialchars($computer['mac_address']); ?>" <?php echo $viewing ? 'disabled' : ''; ?>>
                 <?php if ($editing || $viewing): ?>
                     <input type="hidden" name="mac" value="<?php echo hesk_htmlspecialchars($computer['mac_address']); ?>">
                 <?php endif; ?>
@@ -214,7 +229,6 @@ if (hesk_SESSION('iserror')) {
             </div>
             </div>
 
-            <!-- Row 3: Purchase / Warranty -->
             <div class="grid-2">
             <div class="form-group">
                 <label for="purchase_date"><?php echo $hesklang['purchase_date']; ?>:</label>
@@ -226,7 +240,6 @@ if (hesk_SESSION('iserror')) {
             </div>
             </div>
 
-            <!-- Row 4: Customer / Department -->
             <div class="grid-2">
                 <div class="form-group">
                     <label for="customer_id"><?php echo $hesklang['customer']; ?>:</label>
@@ -252,12 +265,10 @@ if (hesk_SESSION('iserror')) {
                 </div>
             </div>
 
-            <!-- Row 5: CPU / MB -->
             <div class="grid-3">
-                <!-- CPU -->
                 <div class="form-group">
                     <label for="cpu_select"><?php echo $hesklang['cpu']; ?>: <span class="important">*</span></label>
-                    <select name="cpu_id" id="cpu_select" class="form-control" <?php echo ($editing || $viewing) ? 'disabled' : ''; ?>>
+                    <select name="cpu_id" id="cpu_select" class="form-control" <?php echo $viewing ? 'disabled' : ''; ?>>
                         <option value="0"><?php echo $hesklang['select_cpu']; ?></option>
                         <?php while ($c = hesk_dbFetchAssoc($cpus)): ?>
                         <option value="<?php echo $c['id']; ?>" <?php if ($c['id'] == $computer['cpu_id']) echo 'selected'; ?>>
@@ -265,14 +276,13 @@ if (hesk_SESSION('iserror')) {
                         </option>
                         <?php endwhile; ?>
                     </select>
-                    <?php if ($editing || $viewing): ?>
+                    <?php if ($viewing): ?>
                         <input type="hidden" name="cpu_id" value="<?php echo $computer['cpu_id']; ?>">
                     <?php endif; ?>
                 </div>
-                <!-- Motherboard -->
                 <div class="form-group">
                     <label for="mb_select"><?php echo $hesklang['motherboard']; ?>: <span class="important">*</span></label>
-                    <select name="mb_id" id="mb_select" class="form-control" <?php echo ($editing || $viewing) ? 'disabled' : ''; ?>>
+                    <select name="mb_id" id="mb_select" class="form-control" <?php echo $viewing || $editing ? 'disabled' : ''; ?>>
                         <option value="0"><?php echo $hesklang['select_mb']; ?></option>
                         <?php while ($m = hesk_dbFetchAssoc($mbs)): ?>
                         <option value="<?php echo $m['id']; ?>" <?php if ($m['id'] == $computer['mb_id']) echo 'selected'; ?>>
@@ -284,7 +294,6 @@ if (hesk_SESSION('iserror')) {
                         <input type="hidden" name="mb_id" value="<?php echo $computer['mb_id']; ?>">
                     <?php endif; ?>
                 </div>
-                <!-- PSU -->
                 <div class="form-group">
                     <label for="ps_select"><?php echo $hesklang['psu']; ?>:</label>
                     <select name="ps_id" id="ps_select" class="form-control" <?php echo $viewing ? 'disabled' : ''; ?>>
@@ -300,15 +309,13 @@ if (hesk_SESSION('iserror')) {
 
 
             <div class="grid-2">
-            <!-- RAM -->
             <div class="form-group" id="ram_container">
-                <label><?php echo $hesklang['rams']; ?>:<span class="important">*</span></label>
+                <label><?php echo $hesklang['rams']; ?>:</label>
                 <div class="checkbox-group multi-container">
                     <p>Selecione placa‑mãe primeiro</p>
                 </div>
             </div>
 
-            <!-- Disks -->
             <div class="form-group" id="disk_container">
                 <label><?php echo $hesklang['disks']; ?>:</label>
                 <div class="checkbox-group multi-container">
@@ -317,7 +324,6 @@ if (hesk_SESSION('iserror')) {
             </div>
             </div>
 
-            <!-- flags -->
             <div class="form-group grid-4">
                 <div><label><input type="checkbox" name="is_internal" value="1" <?php echo $computer['is_internal'] ? 'checked' : ''; ?> <?php echo $viewing ? 'disabled' : ''; ?>> <?php echo $hesklang['internal']; ?></label></div>
                 <div><label><input type="checkbox" name="is_desktop" value="1" <?php echo $computer['is_desktop'] ? 'checked' : ''; ?> <?php echo $viewing ? 'disabled' : ''; ?>> <?php echo $hesklang['desktop']; ?></label></div>
@@ -331,6 +337,16 @@ if (hesk_SESSION('iserror')) {
 
 
             <?php if ($viewing): ?>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="last_maintenance"><?php echo $hesklang['last_maintenance']; ?><?php $hesklang['last_maintenance'] ?>:</label>
+                        <input type="text" name="last_maintenance" id="last_maintenance" class="form-control" value="<?php echo date('H:i:s - d/m/Y', strtotime($computer['last_maintenance'])); ?>" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="next_maintenance"><?php echo $hesklang['next_maintenance']; ?><?php $hesklang['next_maintenance'] ?>:</label>
+                        <input type="text" name="next_maintenance" id="next_maintenance" class="form-control" value="<?php echo date('H:i:s - d/m/Y', strtotime($computer['next_maintenance'])); ?>" disabled>
+                    </div>
+                </div>
                 <div class="grid-2">
                     <div class="form-group">
                         <label for="created_at"><?php echo $hesklang['created_at']; ?><?php $hesklang['created_at'] ?>:</label>
@@ -348,73 +364,89 @@ if (hesk_SESSION('iserror')) {
 
 <script>
 $(function(){
-  $('#ram_container .multi-container, #disk_container .multi-container')
-    .html('<p>Selecione placa‑mãe primeiro</p>');
-  $('#ram_container input, #disk_container input').prop('disabled', true);
-
-  function fetchComponents(mbId) {
-    $.ajax({
-      url: 'manage_computer.php',
-      method: 'POST',
-      dataType: 'json',
-      data: {
-        fetch_components: '1',
-        mb_id: mbId
-      },
-      success: function(res) {
-        let $ramBox = $('#ram_container .multi-container').empty();
-        res.ram.forEach(function(r){
-          $ramBox.append(
-            $('<label>').append(
-              $('<input>', {
-                type: 'checkbox',
-                name: 'ram_ids[]',
-                value: r.id
-              })
-            ).append(' '+r.model+' '+r.size_gb+'GB ('+r.speed_mhz+'MHz)')
-          );
-        });
-        $('#ram_container input').prop('disabled', false);
-
-        let $diskBox = $('#disk_container .multi-container').empty();
-        res.disk.forEach(function(d){
-          $diskBox.append(
-            $('<label>').append(
-              $('<input>', {
-                type: 'checkbox',
-                name: 'disk_ids[]',
-                value: d.id
-              })
-            ).append(' '+d.model+' '+d.size_gb+'GB ['+d.type+']')
-          );
-        });
-        $('#disk_container input').prop('disabled', false);
-      }
-    });
-  }
-
-  $('#mb_select').on('change', function(){
-    let mb = $(this).val();
-    if (mb > 0) {
-      fetchComponents(mb);
-    } else {
-      $('#ram_container .multi-container, #disk_container .multi-container')
-        .html('<p>Selecione placa‑mãe primeiro</p>');
-      $('#ram_container input, #disk_container input').prop('disabled', true);
+    function initComponents() {
+        let initMb = $('#mb_select').val();
+        if (initMb > 0) {
+            fetchComponents(initMb);
+        } else {
+            $('#ram_container .multi-container, #disk_container .multi-container')
+                .html('<p><?php echo $hesklang['select_mb_first']; ?></p>');
+        }
     }
-  });
+    
+    initComponents();
 
-  let initMb = $('#mb_select').val();
-  if (initMb > 0) {
-    fetchComponents(initMb);
-  }
+    function fetchComponents(mbId) {
+        $.ajax({
+            url: 'manage_computer.php',
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                fetch_components: '1',
+                mb_id: mbId
+            },
+            success: function(res) {
+                let $ramBox = $('#ram_container .multi-container').empty();
+                if (res.ram.length === 0) {
+                    $ramBox.append('<p><?php echo $hesklang['no_ram_available']; ?></p>');
+                } else {
+                    res.ram.forEach(function(r){
+                        let isChecked = existingRamIds.includes(r.id);
+                        let isDisabled = !isChecked && r.stock <= 0;
+                        $ramBox.append(
+                            $('<label>').append(
+                                $('<input>', {
+                                    type: 'checkbox',
+                                    name: 'ram_ids[]',
+                                    value: r.id,
+                                    checked: isChecked,
+                                    disabled: isViewing || isDisabled
+                                })
+                            ).append(' '+r.model+' '+r.size_gb+'GB ('+r.speed_mhz+'MHz) - Stock: ' + r.stock)
+                        );
+                    });
+                }
+
+                let $diskBox = $('#disk_container .multi-container').empty();
+                if (res.disk.length === 0) {
+                    $diskBox.append('<p><?php echo $hesklang['no_disk_available']; ?></p>');
+                } else {
+                    res.disk.forEach(function(d){
+                        let isChecked = existingDiskIds.includes(d.id);
+                        let isDisabled = !isChecked && d.stock <= 0;
+                        $diskBox.append(
+                            $('<label>').append(
+                                $('<input>', {
+                                    type: 'checkbox',
+                                    name: 'disk_ids[]',
+                                    value: d.id,
+                                    checked: isChecked,
+                                    disabled: isViewing || isDisabled
+                                })
+                            ).append(' '+d.model+' '+d.size_gb+'GB ['+d.type+'] - Stock: ' + d.stock)
+                        );
+                    });
+                }
+            }
+        });
+    }
+
+    $('#mb_select').on('change', function(){
+        let mb = $(this).val();
+        if (mb > 0) {
+            fetchComponents(mb);
+        } else {
+            $('#ram_container .multi-container, #disk_container .multi-container')
+                .html('<p><?php echo $hesklang['select_mb_first']; ?></p>');
+        }
+    });
 });
 </script>
 
 
 <?php
 function try_save_computer() {
-    global $dbp, $hesklang;
+    global $dbp, $hesklang, $hesk_db_link;
     hesk_token_check('POST');
     $orig_id = intval(hesk_POST('original_id', 0));
     $editing = ($orig_id > 0);
@@ -462,6 +494,60 @@ function try_save_computer() {
         exit;
     }
     
+    // START -- STOCK MANAGEMENT
+    if ($editing) {
+        // GET CURRENT RAMS
+        $current_rams = [];
+        $res = hesk_dbQuery("SELECT `ram_id` FROM `{$dbp}computer_has_ram` WHERE `computer_id` = {$orig_id}");
+        while ($row = hesk_dbFetchAssoc($res)) {
+            $current_rams[] = $row['ram_id'];
+        }
+
+        // GET CURRENT DISKS
+        $current_disks = [];
+        $res = hesk_dbQuery("SELECT `disk_id` FROM `{$dbp}computer_has_disk` WHERE `computer_id` = {$orig_id}");
+        while ($row = hesk_dbFetchAssoc($res)) {
+            $current_disks[] = $row['disk_id'];
+        }
+
+        $new_rams = array_map('intval', $data['ram_ids']);
+        $new_disks = array_map('intval', $data['disk_ids']);
+
+        $ram_counts_current = array_count_values($current_rams);
+        $ram_counts_new = array_count_values($new_rams);
+
+        $disk_counts_current = array_count_values($current_disks);
+        $disk_counts_new = array_count_values($new_disks);
+
+        $all_ram_ids = array_unique(array_merge($current_rams, $new_rams));
+        foreach ($all_ram_ids as $ram_id) {
+            $diff = ($ram_counts_new[$ram_id] ?? 0) - ($ram_counts_current[$ram_id] ?? 0);
+            if ($diff != 0) {
+                hesk_dbQuery("UPDATE `{$dbp}computers_ram` SET `stock` = `stock` - ({$diff}) WHERE `id` = {$ram_id}");
+            }
+        }
+
+        $all_disk_ids = array_unique(array_merge($current_disks, $new_disks));
+        foreach ($all_disk_ids as $disk_id) {
+            $diff = ($disk_counts_new[$disk_id] ?? 0) - ($disk_counts_current[$disk_id] ?? 0);
+            if ($diff != 0) {
+                hesk_dbQuery("UPDATE `{$dbp}computers_disk` SET `stock` = `stock` - ({$diff}) WHERE `id` = {$disk_id}");
+            }
+        }
+
+    } else { // new computer
+        $ram_counts = array_count_values(array_map('intval', $data['ram_ids']));
+        foreach ($ram_counts as $ram_id => $count) {
+            hesk_dbQuery("UPDATE `{$dbp}computers_ram` SET `stock` = `stock` - {$count} WHERE `id` = {$ram_id}");
+        }
+
+        $disk_counts = array_count_values(array_map('intval', $data['disk_ids']));
+        foreach ($disk_counts as $disk_id => $count) {
+            hesk_dbQuery("UPDATE `{$dbp}computers_disk` SET `stock` = `stock` - {$count} WHERE `id` = {$disk_id}");
+        }
+    }
+    // END -- STOCK MANAGEMENT
+    
     // Build SET clause
     $cols = "
         `asset_tag`      = '".hesk_dbEscape($data['asset_tag'])."',
@@ -490,7 +576,6 @@ function try_save_computer() {
         // Insert
         hesk_dbQuery("INSERT INTO `{$dbp}computers` SET {$cols}");
         // get new ID
-        global $hesk_db_link;
         $comp_id = mysqli_insert_id($hesk_db_link);
         $msg = sprintf($hesklang['computer_added'], '<i>'.hesk_htmlspecialchars($data['name']).'</i>');
     }
@@ -523,3 +608,4 @@ function try_save_computer() {
 }
 
 require_once(HESK_PATH . 'inc/footer.inc.php');
+?>

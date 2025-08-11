@@ -132,8 +132,8 @@ $sql = "SELECT
   ctmr.is_active   AS ctmr_is_active,
   dptmt.name       AS dptmt_name,
   dptmt.is_active  AS dptmt_is_active,
-  GROUP_CONCAT(DISTINCT CONCAT(ram.model, ' ', ram.size_gb, 'GB', ' (', ram.ram_type, 'MHz)') SEPARATOR ', ') AS ram_list,
-  GROUP_CONCAT(DISTINCT CONCAT(disk.model, ' ', disk.size_gb, 'GB', ' [', disk.type, ']') SEPARATOR ', ')  AS disk_list,
+  COALESCE(SUM(DISTINCT ram.size_gb), 0) AS ram_list,
+  COALESCE(SUM(DISTINCT disk.size_gb), 0)  AS disk_list,
   MAX(CASE WHEN ram.is_active = 0 THEN 1 ELSE 0 END) AS ram_has_inactive,
   MAX(CASE WHEN disk.is_active = 0 THEN 1 ELSE 0 END) AS disk_has_inactive
 FROM hesk_computers              AS comp
@@ -178,6 +178,9 @@ if (!hesk_SESSION('iserror')) {
                 </div>
             </div>
         </h2>
+        <a href="#" id="import-btn" class="btn btn--blue-border" ripple="ripple">
+            <?php echo $hesklang['import_computers']; ?>
+        </a>
         <a href="manage_computer.php" class="btn btn--blue-border" ripple="ripple">
             <?php echo $hesklang['add_computer']; ?>
         </a>
@@ -243,9 +246,9 @@ if (!hesk_SESSION('iserror')) {
                         <div class="psu"><strong><?php echo $hesklang['psu']; ?>:</strong>
                             <?php echo htmlspecialchars($row['ps_model'] . ' ' . $row['ps_watts'] . 'W'); ?></div>
                         <div class="ram"><strong><?php echo $hesklang['rams']; ?>:</strong>
-                            <?php echo htmlspecialchars($row['ram_list'] ?: $hesklang['empty']); ?></div>
+                            <?php echo htmlspecialchars($row['ram_list'] ?: $hesklang['empty']); ?>GB</div>
                         <div class="disk"><strong><?php echo $hesklang['disks']; ?>:</strong>
-                            <?php echo htmlspecialchars($row['disk_list'] ?: $hesklang['empty']); ?></div>
+                            <?php echo htmlspecialchars($row['disk_list'] ?: $hesklang['empty']); ?>GB</div>
 
                         <div class="purchase"><strong><?php echo $hesklang['purchase_date']; ?>:</strong>
                             <?php echo htmlspecialchars($row['purchase_date']); ?></div>
