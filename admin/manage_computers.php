@@ -132,8 +132,8 @@ $sql = "SELECT
   ctmr.is_active   AS ctmr_is_active,
   dptmt.name       AS dptmt_name,
   dptmt.is_active  AS dptmt_is_active,
-  GROUP_CONCAT(DISTINCT CONCAT(ram.model, ' ', ram.size_gb, 'GB', ' (', ram.speed_mhz, 'MHz)') SEPARATOR ', ') AS ram_list,
-  GROUP_CONCAT(DISTINCT CONCAT(disk.model, ' ', disk.capacity_gb, 'GB', ' [', disk.disk_type, ']') SEPARATOR ', ')  AS disk_list,
+  COALESCE(SUM(DISTINCT ram.size_gb), 0) AS ram_list,
+  COALESCE(SUM(DISTINCT disk.size_gb), 0)  AS disk_list,
   MAX(CASE WHEN ram.is_active = 0 THEN 1 ELSE 0 END) AS ram_has_inactive,
   MAX(CASE WHEN disk.is_active = 0 THEN 1 ELSE 0 END) AS disk_has_inactive
 FROM hesk_computers              AS comp
@@ -141,9 +141,9 @@ JOIN hesk_computers_cpu          AS cpu   ON cpu.id = comp.cpu_id
 JOIN hesk_computers_mb           AS mb    ON mb.id  = comp.mb_id
 LEFT JOIN hesk_computers_ps      AS ps    ON ps.id = comp.ps_id
 LEFT JOIN hesk_computer_has_ram  AS chr   ON chr.computer_id = comp.id
-LEFT JOIN hesk_computers_ram     AS ram     ON ram.id = chr.ram_id
+LEFT JOIN hesk_computers_ram     AS ram   ON ram.id = chr.ram_id
 LEFT JOIN hesk_computer_has_disk AS cd    ON cd.computer_id = comp.id
-LEFT JOIN hesk_computers_disk    AS disk     ON disk.id = cd.disk_id
+LEFT JOIN hesk_computers_disk    AS disk  ON disk.id = cd.disk_id
 LEFT JOIN hesk_customers         AS ctmr  ON ctmr.id = comp.customer_id
 LEFT JOIN hesk_departments       AS dptmt ON dptmt.id = comp.department_id
 WHERE comp.is_active = 1
@@ -159,7 +159,7 @@ require_once(HESK_PATH . 'inc/header.inc.php');
 require_once(HESK_PATH . 'inc/show_admin_nav.inc.php');
 
 /* This will handle error, success and notice messages */
-if (hesk_SESSION('iserror')) {
+if (!hesk_SESSION('iserror')) {
     hesk_handle_messages();
 }
 ?>
@@ -178,6 +178,9 @@ if (hesk_SESSION('iserror')) {
                 </div>
             </div>
         </h2>
+        <a href="#" id="import-btn" class="btn btn--blue-border" ripple="ripple">
+            <?php echo $hesklang['import_computers']; ?>
+        </a>
         <a href="manage_computer.php" class="btn btn--blue-border" ripple="ripple">
             <?php echo $hesklang['add_computer']; ?>
         </a>
@@ -243,9 +246,9 @@ if (hesk_SESSION('iserror')) {
                         <div class="psu"><strong><?php echo $hesklang['psu']; ?>:</strong>
                             <?php echo htmlspecialchars($row['ps_model'] . ' ' . $row['ps_watts'] . 'W'); ?></div>
                         <div class="ram"><strong><?php echo $hesklang['rams']; ?>:</strong>
-                            <?php echo htmlspecialchars($row['ram_list'] ?: $hesklang['empty']); ?></div>
+                            <?php echo htmlspecialchars($row['ram_list'] ?: $hesklang['empty']); ?>GB</div>
                         <div class="disk"><strong><?php echo $hesklang['disks']; ?>:</strong>
-                            <?php echo htmlspecialchars($row['disk_list'] ?: $hesklang['empty']); ?></div>
+                            <?php echo htmlspecialchars($row['disk_list'] ?: $hesklang['empty']); ?>GB</div>
 
                         <div class="purchase"><strong><?php echo $hesklang['purchase_date']; ?>:</strong>
                             <?php echo htmlspecialchars($row['purchase_date']); ?></div>
