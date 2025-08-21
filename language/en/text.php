@@ -2288,6 +2288,24 @@ $hesklang['asset_deleted']='Asset deleted successfully';
 $hesklang['component_added']='Component %s added successfully';
 $hesklang['component_updated']='Component %s updated successfully';
 $hesklang['invalid_component']='Invalid component';
+$hesklang['ticket_statistics']='Ticket Statistics';
+$hesklang['last_updated']='Last updated';
+$hesklang['data_not_available']='Data not available';
+$hesklang['avg_time_per_ticket']='Avg time per ticket';
+$hesklang['across']='Across';
+$hesklang['tickets']='tickets';
+$hesklang['resolved_tickets']='Resolved Tickets';
+$hesklang['successfully_closed']='Successfully closed';
+$hesklang['unresolved_tickets']='Unresolved Tickets';
+$hesklang['requiring_attention']='Requiring attention';
+$hesklang['open_vs_closed_tickets']='Open vs. Closed Tickets';
+$hesklang['tickets_per_category']='Tickets per Category';
+$hesklang['top_requesters']='Top Requesters';
+$hesklang['avg_tickets_per_week']='Average Tickets per Week';
+$hesklang['unresolved']='Unresolved';
+$hesklang['resolved']='Resolved';
+$hesklang['all_weeks']='All weeks';
+$hesklang['observed_weeks']='Observed weeks';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
