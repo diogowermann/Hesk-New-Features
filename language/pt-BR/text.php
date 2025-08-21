@@ -2384,7 +2384,24 @@ $hesklang['both']="Ambos";
 $hesklang['asset_deleted']="Ativo excluído com sucesso";
 $hesklang['component_added']="Componente %s adicionado com sucesso";
 $hesklang['invalid_component']="Componente inválido";
-
+$hesklang['ticket_statistics']='Estatísticas de Chamados';
+$hesklang['last_updated']='Última atualização';
+$hesklang['data_not_available']='Dados indisponíveis';
+$hesklang['avg_time_per_ticket']='Tempo médio por chamado';
+$hesklang['across']='Em';
+$hesklang['tickets']='chamados';
+$hesklang['resolved_tickets']='Chamados resolvidos';
+$hesklang['successfully_closed']='Encerrados com sucesso';
+$hesklang['unresolved_tickets']='Chamados não resolvidos';
+$hesklang['requiring_attention']='Que exigem atenção';
+$hesklang['open_vs_closed_tickets']='Chamados abertos vs. encerrados';
+$hesklang['tickets_per_category']='Chamados por categoria';
+$hesklang['top_requesters']='Principais solicitantes';
+$hesklang['avg_tickets_per_week']='Média de chamados por semana';
+$hesklang['unresolved']='Não resolvidos';
+$hesklang['resolved']='Resolvidos';
+$hesklang['all_weeks']='Todas as semanas';
+$hesklang['observed_weeks']='Semanas observadas';
 // END CUSTOM
 
 // DO NOT CHANGE BELOW
